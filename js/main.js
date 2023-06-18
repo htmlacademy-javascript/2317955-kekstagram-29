@@ -48,92 +48,86 @@ const NAMES_SET = [
   'Xinael'
 ];
 
-// Каждый объект массива — описание фотографии, опубликованной пользователем.
-// Структура каждого объекта должна быть следующей:
-const objectFotoExample = {
-  //  число — идентификатор опубликованной фотографии. Это число от 1 до 25. Идентификаторы не должны повторяться.
-  // доп задание из кексобукинга: перед однозначными числами ставится 0, например 01, 02, 03 ... 10
-  id: 0,
 
-  // строка — адрес картинки вида photos/{{i}}.jpg, где {{i}} — это число от 1 до 25. Адреса картинок не должны повторяться.
-  // доп задание из кексобукинга: перед однозначными числами ставится 0, например 01, 02, 03 ... 10
-  url: '',
-
-  // строка — описание фотографии из DESCRIPTIONS_SET
-  description: '',
-
-  // число — количество лайков, поставленных фотографии. Случайное число от 15 до 200.
-  likes: 0,
-
-  //  массив объектов — список комментариев, оставленных другими пользователями к этой фотографии. размер массива — случайное число от 0 до 30. Все комментарии генерируются случайным образом.
-  comments: [ {id: 0, avatar: '', message: '', name: '', } ],
-}
-
-const objectCommentExample = {
-  //  любое число. Идентификаторы не должны повторяться.
-  id: 0,
-
-  // формируется по правилу img/avatar-{{случайное число от 1 до 6}}.svg. Аватарки подготовлены в директории img.
-  // доп задание из кексобукинга: перед однозначными числами ставится 0, например 01, 02, 03 ... 10
-  avatar: '',
-
-  // взять одно или два случайных предложения из представленных в MESSAGES_SET
-  message: '',
-
-  //Имена авторов также должны быть случайными из NAMES_SET
-  name: '',
-}
-
-
-// написать вспомогательные функции:
-
-// получает целое положительное число в указанном диапазоне (если не указан - возвращает 1)
-const getRandomIntegerPositiveNumber = (from = 1, to = 1) => {
-  if (from === to) {
-    return from;
+// получает целое положительное число в указанном диапазоне. если передано одно значение - возвращает от 0 до этого значения включительно. если ничего не передано - возвращает undefined
+const getRandomIntegerNotNegativeNumber = (a, b) => {
+  if (a === b) {
+    return a;
   }
-  from = from > 0 ? Math.round(parseInt(from, 10)) : 1;
-  to = to > 0 ? Math.round(parseInt(to, 10)) : 1;
-  if (from > to) {
-    const swap = to;
-    to = from;
-    from = swap;
+  a = a > 0 ? Math.round(parseInt(a, 10)) : 0;
+  b = b > 0 ? Math.round(parseInt(b, 10)) : 0;
+  const min = Math.min(a, b);
+  const max = Math.max(a, b);
+  const rangeSize = max - min;
+  return Math.round(min + Math.random() * rangeSize);
+};
+
+// создает массив чисел в заданном диапазоне и с помощью заданной инструкции, в массиве перечислены все числа из диапазона в рандомном порядке без повторений
+const getNumbersArray = (from, to, instructions) => {
+  const arrayLength = to - from + 1;
+  const numbers = [];
+  while (numbers.length < arrayLength) {
+    let newNumber = instructions(from, to);
+    while (numbers.includes(newNumber)) {
+      newNumber = instructions(from, to);
+    }
+    numbers.push(newNumber);
   }
-  const rangeSize = to - from;
-  return Math.round(from + Math.random() * rangeSize);
+  return numbers;
 };
 
 // получает рандомный элемент из переданного массива по рандомному индексу
 const getRandomElement = (array) => {
-  const index = getRandomIntegerPositiveNumber(array.length - 1);
+  const index = getRandomIntegerNotNegativeNumber(array.length - 1);
   return array[index];
 };
 
-// создать объект из элементов, полученных по рандомному индексу из массива
-const getRandomComment = () => ({
-  id: getRandomIntegerPositiveNumber(25),
-  avatar: `img/avatar-${getRandomIntegerPositiveNumber(6)}.svg`,
-  message: getRandomElement(MESSAGES_SET),
-  name: getRandomElement(NAMES_SET),
-});
-// console.table(getRandomComment());
+// создает строку из предложений из набора MESSAGES_SET в случайном кол-ве из указанного диапазона
+const getMessage = (from, to) => {
+  const messagesAmount = getRandomIntegerNotNegativeNumber(from, to);
+  const messagesIndexes = getNumbersArray (0, messagesAmount - 1, getRandomIntegerNotNegativeNumber);
+  const messages = [];
+  for (let i = 0; i < messagesAmount; i++) {
+    const message = MESSAGES_SET[messagesIndexes[i]];
+    messages.push(message);
+  }
+  return messages.join(' ');
+};
 
-// создать массив из объектов рандомной длинны заданного диапазона
-const getRandomArray = (maxLength, instructions) =>
-  Array.from({length: getRandomIntegerPositiveNumber(0, maxLength)}, instructions);
-// console.table(getRandomArray(30, getRandomComment))
+// создает массив произвольной длинны в заданном диапазоне из объектов-комментариев
+const getRandomComments = (from, to) => {
+  const commentsAmount = getRandomIntegerNotNegativeNumber(from, to);
+  const ids = getNumbersArray(1, commentsAmount, getRandomIntegerNotNegativeNumber);
+  const comments = [];
+  for (let i = 0; i < commentsAmount; i++) {
+    const comment = {
+      id: ids[i],
+      avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
+      message: getMessage(1, 2),
+      name: getRandomElement(NAMES_SET),
+    };
+    comments.push(comment);
+  }
+  return comments;
+};
 
+// создает массив произвольной длинны в заданном диапазоне из объектов-фотографий, внутри которых есть объекты-комментарии
+const getRandomFotos = (from, to) => {
+  const fotosAmount = getRandomIntegerNotNegativeNumber(from, to);
+  const ids = getNumbersArray(1, fotosAmount, getRandomIntegerNotNegativeNumber);
+  const urls = getNumbersArray(1, fotosAmount, getRandomIntegerNotNegativeNumber);
+  const fotos = [];
+  for (let i = 0; i < fotosAmount; i++) {
+    const foto = {
+      id: ids[i],
+      url: `photos/${urls[i]}.jpg`,
+      description: getRandomElement(DESCRIPTIONS_SET),
+      likes: getRandomIntegerNotNegativeNumber(15, 200),
+      comments: getRandomComments(30),
+    };
+    fotos.push(foto);
+  }
+  return fotos;
+};
 
-const getRandomFoto = () => ({
-  id: getRandomIntegerPositiveNumber(25),
-  url: `photos/${getRandomIntegerPositiveNumber(25)}.jpg`,
-  description: getRandomElement(DESCRIPTIONS_SET),
-  likes: getRandomIntegerPositiveNumber(15, 200),
-  comments: getRandomArray(30, getRandomComment),
-})
-// console.log(getRandomFoto());
-
-//нужно проверить, что рандомные объекты в массиве не будут повторяться!
-
-// когда получилось получить один правильно собранный из рандомных элементов объект - тогда начать делать массив из таких объектов
-
+getRandomFotos(FOTOS_AMOUNT, FOTOS_AMOUNT);
