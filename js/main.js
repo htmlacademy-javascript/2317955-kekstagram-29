@@ -48,7 +48,6 @@ const NAMES_SET = [
   'Xinael'
 ];
 
-
 // получает целое положительное число в указанном диапазоне. если передано одно значение - возвращает от 0 до этого значения включительно. если ничего не передано - возвращает undefined
 const getRandomIntegerNotNegativeNumber = (a, b) => {
   if (a === b) {
@@ -61,6 +60,9 @@ const getRandomIntegerNotNegativeNumber = (a, b) => {
   const rangeSize = max - min;
   return Math.round(min + Math.random() * rangeSize);
 };
+
+
+// ПЕРВОНАЧАЛЬНОЕ РЕШЕНИЕ БЕЗ ИСПОЛЬЗОВАНИЯ ПРИЕМОВ, ОПИСАННЫХ В ДЕМОНСТАРЦИЯХ "Практическая польза замыканий" И "Учебный проект: нас орда" //
 
 // создает массив чисел в заданном диапазоне и с помощью заданной инструкции, в массиве перечислены все числа из диапазона в рандомном порядке без повторений
 const getNumbersArray = (from, to, instructions) => {
@@ -131,3 +133,59 @@ const getRandomFotos = (from, to) => {
 };
 
 getRandomFotos(FOTOS_AMOUNT, FOTOS_AMOUNT);
+
+
+// РЕШЕНИЕ НА ОСНОВЕ ДЕМОНСТРАЦИЙ "Практическая польза замыканий" И "Учебный проект: нас орда" //
+
+// создает генератор айди в заданном диапазоне
+function makeIdGenerator (min, max) {
+  const previousIds = [];
+  return function() {
+    if (previousIds.length === (max - min + 1)) {
+      return null;
+    }
+    let newId = getRandomIntegerNotNegativeNumber(min, max);
+    while (previousIds.includes(newId)) {
+      newId = getRandomIntegerNotNegativeNumber(min, max);
+    }
+    previousIds.push(newId);
+    return newId;
+  };
+}
+
+// создает текст комментария, набрав его из случайных предложений из массива MESSAGES_SET
+const getMessageText = (minSize, maxSize) => {
+  const size = (maxSize > MESSAGES_SET.length) ? MESSAGES_SET.length : getRandomIntegerNotNegativeNumber(minSize, maxSize);
+  const messageArray = [];
+  while(messageArray.length < size) {
+    const index = getRandomIntegerNotNegativeNumber(0, MESSAGES_SET.length - 1);
+    messageArray.push(MESSAGES_SET[index]);
+  }
+  return messageArray.join(' ');
+};
+
+// создает массив случайно сгенерированных комментариев случайного размера из указанного диапазоне
+function makeComments(minCommentsAmount, maxCommentsAmount) {
+  const commentsAmount = getRandomIntegerNotNegativeNumber(minCommentsAmount, maxCommentsAmount);
+  const generateCommentId = makeIdGenerator(1, commentsAmount);
+  return Array.from({length: commentsAmount}, () => ({
+    id: generateCommentId(),
+    avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
+    message: getMessageText(1, 2),
+    name: getRandomElement(NAMES_SET),
+  }));
+}
+
+// создает массив случайно сгенерированных фотографий в заданном количестве
+function makeFoto (fotosAmount) {
+  const generateFotoId = makeIdGenerator(1, fotosAmount);
+  return Array.from({length: fotosAmount}, () => ({
+    id: generateFotoId(),
+    url: `photos/${getRandomIntegerNotNegativeNumber(1, 6)}.jpg`,
+    description: getRandomElement(DESCRIPTIONS_SET),
+    likes: getRandomIntegerNotNegativeNumber(15, 200),
+    comments: makeComments(0, 30),
+  }));
+}
+
+makeFoto(FOTOS_AMOUNT);
