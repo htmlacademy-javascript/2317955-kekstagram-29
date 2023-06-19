@@ -61,6 +61,23 @@ const getRandomIntegerNotNegativeNumber = (a, b) => {
   return Math.round(min + Math.random() * rangeSize);
 };
 
+// получает рандомный элемент из переданного массива по рандомному индексу
+const getRandomElement = (array) => {
+  const index = getRandomIntegerNotNegativeNumber(array.length - 1);
+  return array[index];
+};
+
+// создает строку из предложений из набора MESSAGES_SET в случайном кол-ве из указанного диапазона
+const getMessage = (minSize, maxSize) => {
+  const size = (minSize > MESSAGES_SET.length) || (maxSize > MESSAGES_SET.length) ? MESSAGES_SET.length : getRandomIntegerNotNegativeNumber(minSize, maxSize);
+  const messageArray = [];
+  while(messageArray.length < size) {
+    const index = getRandomIntegerNotNegativeNumber(0, MESSAGES_SET.length - 1);
+    messageArray.push(MESSAGES_SET[index]);
+  }
+  return messageArray.join(' ');
+};
+
 
 // ПЕРВОНАЧАЛЬНОЕ РЕШЕНИЕ БЕЗ ИСПОЛЬЗОВАНИЯ ПРИЕМОВ, ОПИСАННЫХ В ДЕМОНСТАРЦИЯХ "Практическая польза замыканий" И "Учебный проект: нас орда" //
 
@@ -76,24 +93,6 @@ const getNumbersArray = (from, to, instructions) => {
     numbers.push(newNumber);
   }
   return numbers;
-};
-
-// получает рандомный элемент из переданного массива по рандомному индексу
-const getRandomElement = (array) => {
-  const index = getRandomIntegerNotNegativeNumber(array.length - 1);
-  return array[index];
-};
-
-// создает строку из предложений из набора MESSAGES_SET в случайном кол-ве из указанного диапазона
-const getMessage = (from, to) => {
-  const messagesAmount = getRandomIntegerNotNegativeNumber(from, to);
-  const messagesIndexes = getNumbersArray (0, messagesAmount - 1, getRandomIntegerNotNegativeNumber);
-  const messages = [];
-  for (let i = 0; i < messagesAmount; i++) {
-    const message = MESSAGES_SET[messagesIndexes[i]];
-    messages.push(message);
-  }
-  return messages.join(' ');
 };
 
 // создает массив произвольной длинны в заданном диапазоне из объектов-комментариев
@@ -114,8 +113,7 @@ const getRandomComments = (from, to) => {
 };
 
 // создает массив произвольной длинны в заданном диапазоне из объектов-фотографий, внутри которых есть объекты-комментарии
-const getRandomFotos = (from, to) => {
-  const fotosAmount = getRandomIntegerNotNegativeNumber(from, to);
+const getRandomFotos = (fotosAmount) => {
   const ids = getNumbersArray(1, fotosAmount, getRandomIntegerNotNegativeNumber);
   const urls = getNumbersArray(1, fotosAmount, getRandomIntegerNotNegativeNumber);
   const fotos = [];
@@ -132,7 +130,7 @@ const getRandomFotos = (from, to) => {
   return fotos;
 };
 
-getRandomFotos(FOTOS_AMOUNT, FOTOS_AMOUNT);
+getRandomFotos(FOTOS_AMOUNT);
 
 
 // РЕШЕНИЕ НА ОСНОВЕ ДЕМОНСТРАЦИЙ "Практическая польза замыканий" И "Учебный проект: нас орда" //
@@ -153,17 +151,6 @@ function makeIdGenerator (min, max) {
   };
 }
 
-// создает текст комментария, набрав его из случайных предложений из массива MESSAGES_SET
-const getMessageText = (minSize, maxSize) => {
-  const size = (maxSize > MESSAGES_SET.length) ? MESSAGES_SET.length : getRandomIntegerNotNegativeNumber(minSize, maxSize);
-  const messageArray = [];
-  while(messageArray.length < size) {
-    const index = getRandomIntegerNotNegativeNumber(0, MESSAGES_SET.length - 1);
-    messageArray.push(MESSAGES_SET[index]);
-  }
-  return messageArray.join(' ');
-};
-
 // создает массив случайно сгенерированных комментариев случайного размера из указанного диапазоне
 function makeComments(minCommentsAmount, maxCommentsAmount) {
   const commentsAmount = getRandomIntegerNotNegativeNumber(minCommentsAmount, maxCommentsAmount);
@@ -171,7 +158,7 @@ function makeComments(minCommentsAmount, maxCommentsAmount) {
   return Array.from({length: commentsAmount}, () => ({
     id: generateCommentId(),
     avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
-    message: getMessageText(1, 2),
+    message: getMessage(1, 2),
     name: getRandomElement(NAMES_SET),
   }));
 }
@@ -179,9 +166,10 @@ function makeComments(minCommentsAmount, maxCommentsAmount) {
 // создает массив случайно сгенерированных фотографий в заданном количестве
 function makeFoto (fotosAmount) {
   const generateFotoId = makeIdGenerator(1, fotosAmount);
+  const generateUrl = makeIdGenerator(1, fotosAmount);
   return Array.from({length: fotosAmount}, () => ({
     id: generateFotoId(),
-    url: `photos/${getRandomIntegerNotNegativeNumber(1, 6)}.jpg`,
+    url: `photos/${generateUrl()}.jpg`,
     description: getRandomElement(DESCRIPTIONS_SET),
     likes: getRandomIntegerNotNegativeNumber(15, 200),
     comments: makeComments(0, 30),
