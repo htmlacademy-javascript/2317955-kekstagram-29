@@ -79,61 +79,38 @@ const getMessage = (minSize, maxSize) => {
 };
 
 
-// ПЕРВОНАЧАЛЬНОЕ РЕШЕНИЕ БЕЗ ИСПОЛЬЗОВАНИЯ ПРИЕМОВ, ОПИСАННЫХ В ДЕМОНСТАРЦИЯХ "Практическая польза замыканий" И "Учебный проект: нас орда" //
-
-// создает массив чисел в заданном диапазоне и с помощью заданной инструкции, в массиве перечислены все числа из диапазона в рандомном порядке без повторений
-const getNumbersArray = (from, to, instructions) => {
-  const arrayLength = to - from + 1;
-  const numbers = [];
-  while (numbers.length < arrayLength) {
-    let newNumber = instructions(from, to);
-    while (numbers.includes(newNumber)) {
-      newNumber = instructions(from, to);
-    }
-    numbers.push(newNumber);
-  }
-  return numbers;
-};
+// ПЕРВОНАЧАЛЬНОЕ РЕШЕНИЕ БЕЗ ИСПОЛЬЗОВАНИЯ ГЕНЕРАТОРА //
 
 // создает массив произвольной длинны в заданном диапазоне из объектов-комментариев
 const getRandomComments = (from, to) => {
   const commentsAmount = getRandomIntegerNotNegativeNumber(from, to);
-  const ids = getNumbersArray(1, commentsAmount, getRandomIntegerNotNegativeNumber);
-  const comments = [];
-  for (let i = 0; i < commentsAmount; i++) {
-    const comment = {
-      id: ids[i],
+  return Array.from({length: commentsAmount}, (element, id) => {
+    id++;
+    return {
+      id: id,
       avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
       message: getMessage(1, 2),
       name: getRandomElement(NAMES_SET),
     };
-    comments.push(comment);
-  }
-  return comments;
+  });
 };
 
 // создает массив произвольной длинны в заданном диапазоне из объектов-фотографий, внутри которых есть объекты-комментарии
-const getRandomFotos = (fotosAmount) => {
-  const ids = getNumbersArray(1, fotosAmount, getRandomIntegerNotNegativeNumber);
-  const urls = getNumbersArray(1, fotosAmount, getRandomIntegerNotNegativeNumber);
-  const fotos = [];
-  for (let i = 0; i < fotosAmount; i++) {
-    const foto = {
-      id: ids[i],
-      url: `photos/${urls[i]}.jpg`,
-      description: getRandomElement(DESCRIPTIONS_SET),
-      likes: getRandomIntegerNotNegativeNumber(15, 200),
-      comments: getRandomComments(30),
-    };
-    fotos.push(foto);
-  }
-  return fotos;
-};
+const getRandomFotos = (fotosAmount) => Array.from({length: fotosAmount}, (element, id) => {
+  id++;
+  return {
+    id: id,
+    url: `photos/${id}.jpg`,
+    description: getRandomElement(DESCRIPTIONS_SET),
+    likes: getRandomIntegerNotNegativeNumber(15, 200),
+    comments: getRandomComments(30),
+  };
+});
 
 getRandomFotos(FOTOS_AMOUNT);
 
 
-// РЕШЕНИЕ НА ОСНОВЕ ДЕМОНСТРАЦИЙ "Практическая польза замыканий" И "Учебный проект: нас орда" //
+// РЕШЕНИЕ С ИСПОЛЬЗОВАНИЕМ ГЕНЕРАТОРА НА ОСНОВЕ ДЕМОНСТРАЦИЙ "Практическая польза замыканий" И "Учебный проект: нас орда" //
 
 // создает генератор айди в заданном диапазоне
 function makeIdGenerator (min, max) {
