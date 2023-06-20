@@ -84,28 +84,22 @@ const getMessage = (minSize, maxSize) => {
 // создает массив произвольной длинны в заданном диапазоне из объектов-комментариев
 const getRandomComments = (from, to) => {
   const commentsAmount = getRandomIntegerNotNegativeNumber(from, to);
-  return Array.from({length: commentsAmount}, (element, id) => {
-    id++;
-    return {
-      id: id,
-      avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
-      message: getMessage(1, 2),
-      name: getRandomElement(NAMES_SET),
-    };
-  });
+  return Array.from({length: commentsAmount}, (element, i) => ({
+    id: i + 1,
+    avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
+    message: getMessage(1, 2),
+    name: getRandomElement(NAMES_SET),
+  }));
 };
 
 // создает массив произвольной длинны в заданном диапазоне из объектов-фотографий, внутри которых есть объекты-комментарии
-const getRandomFotos = (fotosAmount) => Array.from({length: fotosAmount}, (element, id) => {
-  id++;
-  return {
-    id: id,
-    url: `photos/${id}.jpg`,
-    description: getRandomElement(DESCRIPTIONS_SET),
-    likes: getRandomIntegerNotNegativeNumber(15, 200),
-    comments: getRandomComments(30),
-  };
-});
+const getRandomFotos = (fotosAmount) => Array.from({length: fotosAmount}, (element, i) => ({
+  id: i + 1,
+  url: `photos/${i + 1}.jpg`,
+  description: getRandomElement(DESCRIPTIONS_SET),
+  likes: getRandomIntegerNotNegativeNumber(15, 200),
+  comments: getRandomComments(30),
+}));
 
 getRandomFotos(FOTOS_AMOUNT);
 
