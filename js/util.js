@@ -44,11 +44,11 @@ extractNumbers(generateString());
 
 // получает целое не отрицательное число в указанном диапазоне. если передано одно значение - возвращает от 0 до этого значения включительно. если ничего не передано - возвращает undefined
 const getRandomIntegerNotNegativeNumber = (a, b) => {
+  a = a > 0 ? Math.round(parseInt(a, 10)) : 0;
+  b = b > 0 ? Math.round(parseInt(b, 10)) : 0;
   if (a === b) {
     return a;
   }
-  a = a > 0 ? Math.round(parseInt(a, 10)) : 0;
-  b = b > 0 ? Math.round(parseInt(b, 10)) : 0;
   const min = Math.min(a, b);
   const max = Math.max(a, b);
   const rangeSize = max - min;

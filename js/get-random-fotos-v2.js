@@ -1,8 +1,9 @@
-import {MAX_COMMENTS_AMOUNT, MESSAGES_SET, DESCRIPTIONS_SET, NAMES_SET} from './data.js';
+import {MESSAGES_SET, DESCRIPTIONS_SET, NAMES_SET} from './data.js';
+import {MAX_COMMENTS_AMOUNT, MAX_AVATAR_URL} from './constants.js';
 import {getRandomElement, getRandomIntegerNotNegativeNumber} from './util.js';
 
 // РЕШЕНИЕ "4.16. Больше деталей" С ИСПОЛЬЗОВАНИЕМ ГЕНЕРАТОРА НА ОСНОВЕ ДЕМОНСТРАЦИЙ "Практическая польза замыканий" И "Учебный проект: нас орда" //
-// функции для создания массива из 25  случайно сгенерированных объектов (фотографий)
+// функции для создания массива из случайно сгенерированных объектов (фотографий)
 
 // создает строку из предложений из набора MESSAGES_SET в случайном кол-ве из указанного диапазона
 const getMessage = (minSize, maxSize) => {
@@ -16,7 +17,7 @@ const getMessage = (minSize, maxSize) => {
 };
 
 // создает генератор айди в заданном диапазоне
-function makeIdGenerator (min, max) {
+const makeIdGenerator = (min, max) => {
   const previousIds = [];
   return function() {
     if (previousIds.length === (max - min + 1)) {
@@ -29,22 +30,22 @@ function makeIdGenerator (min, max) {
     previousIds.push(newId);
     return newId;
   };
-}
+};
 
-// создает массив случайно сгенерированных комментариев случайного размера из указанного диапазоне
-function makeComments(minCommentsAmount, maxCommentsAmount) {
+// создает массив произвольной длинны в заданном диапазоне из объектов-комментариев
+const getRandomComments = (minCommentsAmount, maxCommentsAmount) => {
   const commentsAmount = getRandomIntegerNotNegativeNumber(minCommentsAmount, maxCommentsAmount);
   const generateCommentId = makeIdGenerator(1, commentsAmount);
   return Array.from({length: commentsAmount}, () => ({
     id: generateCommentId(),
-    avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
+    avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, MAX_AVATAR_URL)}.svg`,
     message: getMessage(1, 2),
     name: getRandomElement(NAMES_SET),
   }));
-}
+};
 
-// создает массив случайно сгенерированных фотографий в заданном количестве
-function makeFotos (fotosAmount) {
+// создает массив заданной длинны из случайных объектов-фотографий, внутри которых есть массив с случайными объектами-комментариями
+const getRandomFotosV2 = (fotosAmount) => {
   const generateFotoId = makeIdGenerator(1, fotosAmount);
   const generateUrl = makeIdGenerator(1, fotosAmount);
   return Array.from({length: fotosAmount}, () => ({
@@ -52,9 +53,9 @@ function makeFotos (fotosAmount) {
     url: `photos/${generateUrl()}.jpg`,
     description: getRandomElement(DESCRIPTIONS_SET),
     likes: getRandomIntegerNotNegativeNumber(15, 200),
-    comments: makeComments(0, MAX_COMMENTS_AMOUNT),
+    comments: getRandomComments(MAX_COMMENTS_AMOUNT),
   }));
-}
+};
 
 
-export {makeFotos};
+export {getRandomFotosV2};

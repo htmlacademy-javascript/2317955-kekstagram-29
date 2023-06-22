@@ -1,8 +1,9 @@
-import {MAX_COMMENTS_AMOUNT, MESSAGES_SET, DESCRIPTIONS_SET, NAMES_SET} from './data.js';
+import {MESSAGES_SET, DESCRIPTIONS_SET, NAMES_SET} from './data.js';
+import {MAX_COMMENTS_AMOUNT, MAX_AVATAR_URL} from './constants.js';
 import {getRandomElement, getRandomIntegerNotNegativeNumber} from './util.js';
 
 // ПЕРВОНАЧАЛЬНОЕ РЕШЕНИЕ "4.16. Больше деталей" БЕЗ ИСПОЛЬЗОВАНИЯ ГЕНЕРАТОРА //
-// функции для создания массива из 25  случайно сгенерированных объектов (фотографий)
+// функции для создания массива из случайно сгенерированных объектов (фотографий)
 
 // создает строку из предложений из набора MESSAGES_SET в случайном кол-ве из указанного диапазона
 const getMessage = (minSize, maxSize) => {
@@ -16,18 +17,18 @@ const getMessage = (minSize, maxSize) => {
 };
 
 // создает массив произвольной длинны в заданном диапазоне из объектов-комментариев
-const getRandomComments = (from, to) => {
-  const commentsAmount = getRandomIntegerNotNegativeNumber(from, to);
-  return Array.from({length: commentsAmount}, (element, i) => ({
+const getRandomComments = (minCommentsAmount, maxCommentsAmount) => {
+  const commentsAmount = getRandomIntegerNotNegativeNumber(minCommentsAmount, maxCommentsAmount);
+  return Array.from({length: commentsAmount}, (_, i) => ({
     id: i + 1,
-    avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, 6)}.svg`,
+    avatar: `img/avatar-${getRandomIntegerNotNegativeNumber(1, MAX_AVATAR_URL)}.svg`,
     message: getMessage(1, 2),
     name: getRandomElement(NAMES_SET),
   }));
 };
 
-// создает массив произвольной длинны в заданном диапазоне из объектов-фотографий, внутри которых есть объекты-комментарии
-const getRandomFotos = (fotosAmount) => Array.from({length: fotosAmount}, (element, i) => ({
+// создает массив заданной длинны из случайных объектов-фотографий, внутри которых есть массив с случайными объектами-комментариями
+const getRandomFotosV1 = (fotosAmount) => Array.from({length: fotosAmount}, (_, i) => ({
   id: i + 1,
   url: `photos/${i + 1}.jpg`,
   description: getRandomElement(DESCRIPTIONS_SET),
@@ -36,4 +37,4 @@ const getRandomFotos = (fotosAmount) => Array.from({length: fotosAmount}, (eleme
 }));
 
 
-export {getRandomFotos};
+export {getRandomFotosV1};
