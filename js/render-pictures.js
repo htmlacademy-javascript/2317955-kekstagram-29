@@ -24,8 +24,9 @@ const picturesData = getRandomFotosV2(FOTOS_AMOUNT);
 
 const picturesTemporaryFragment = document.createDocumentFragment();
 
-picturesData.forEach(({url, description, likes, comments}) => {
+picturesData.forEach(({url, description, likes, comments, id}) => {
   const newPicture = pictureTemplate.cloneNode(true);
+  newPicture.dataset.id = id;
   const image = newPicture.querySelector('.picture__img');
   image.src = url;
   image.alt = description;
@@ -36,3 +37,5 @@ picturesData.forEach(({url, description, likes, comments}) => {
 
 const renderPictures = () => picturesContainer.append(picturesTemporaryFragment);
 renderPictures();
+
+export {picturesData};
