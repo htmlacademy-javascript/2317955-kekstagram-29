@@ -21,6 +21,7 @@ const openFullPicture = (evt) => {
 const closeFullPicture = () => {
   fullPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  picturesContainer.addEventListener('click', onPicturesContainer);
 };
 
 const onDocumentEscape = (evt) => {
@@ -34,7 +35,6 @@ const onFullPictureCloseButton = () => {
   closeFullPicture();
   document.removeEventListener('keydown', onDocumentEscape);
   fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
-  picturesContainer.addEventListener('click', onPicturesContainer);
 };
 
 const onPicturesContainer = (evt) => {
