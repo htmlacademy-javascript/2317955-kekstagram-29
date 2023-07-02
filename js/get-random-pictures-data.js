@@ -45,7 +45,7 @@ const getRandomComments = (minCommentsAmount, maxCommentsAmount) => {
 };
 
 // создает массив заданной длинны из случайных объектов-фотографий, внутри которых есть массив с случайными объектами-комментариями
-const getRandomFotosV2 = (fotosAmount) => {
+const getRandomPicturesData = (fotosAmount) => {
   const generateFotoId = makeIdGenerator(1, fotosAmount);
   const generateUrl = makeIdGenerator(1, fotosAmount);
   return Array.from({length: fotosAmount}, () => ({
@@ -58,4 +58,4 @@ const getRandomFotosV2 = (fotosAmount) => {
 };
 
 
-export {getRandomFotosV2};
+export {getRandomPicturesData};
