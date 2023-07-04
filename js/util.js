@@ -61,5 +61,18 @@ const getRandomElement = (array) => {
   return array[index];
 };
 
+const makeElement = (tagName, className, text) => {
+  const someElement = document.createElement(tagName);
+  someElement.classList.add(className);
 
-export {getRandomElement, getRandomIntegerNotNegativeNumber};
+  if (text) {
+    if (tagName === 'img') {
+      someElement.alt = text;
+    }
+    someElement.textContent = text;
+  }
+
+  return someElement;
+};
+
+export {getRandomElement, getRandomIntegerNotNegativeNumber, makeElement};

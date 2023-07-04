@@ -1,5 +1,10 @@
+import {renderFewComments} from './comments.js';
+
+
 const fullPicture = document.querySelector('.big-picture');
 const fullPictureCommentsContainer = fullPicture.querySelector('.social__comments');
+const fullPictureCommentsLoadBtn = fullPicture.querySelector('.social__comments-loader');
+
 
 const renderFullPicture = ({url, likes, comments, description}) => {
   fullPicture.querySelector('.big-picture__img img').src = url;
@@ -7,32 +12,29 @@ const renderFullPicture = ({url, likes, comments, description}) => {
   fullPicture.querySelector('.comments-count').textContent = comments.length;
   fullPicture.querySelector('.social__caption').textContent = description;
 
-  fullPicture.querySelector('.social__comment-count').classList.add('hidden');
-  fullPicture.querySelector('.comments-loader').classList.add('hidden');
+  // почему линтер ругается на такой тернарник?
+  // comments.length < 6 ? fullPicture.querySelector('.social__comments-loader').classList.add('hidden') : fullPicture.querySelector('.social__comments-loader').classList.remove('hidden');
+
+  if (comments.length < 6) {
+    fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
+  } else {
+    fullPicture.querySelector('.social__comments-loader').classList.remove('hidden');
+  }
 
   fullPictureCommentsContainer.innerHTML = '';
-  const commentsTemporaryFragment = document.createDocumentFragment();
-  comments.forEach(({avatar, name, message}) => {
-    const newComment = document.createElement('li');
-    newComment.classList.add('social__comment');
+  const getCommentsTemporaryFragment = renderFewComments(5, comments);
+  const commentsTemporaryFragment = getCommentsTemporaryFragment();
+  fullPictureCommentsContainer.append(commentsTemporaryFragment);
 
-    const commentAvatar = document.createElement('img');
-    commentAvatar.classList.add('social__picture');
-    commentAvatar.src = avatar;
-    commentAvatar.alt = name;
-    commentAvatar.width = 35;
-    commentAvatar.height = 35;
-    newComment.append(commentAvatar);
+  fullPictureCommentsLoadBtn.addEventListener('click', () => {
+    const commentsTemporaryFragment2 = getCommentsTemporaryFragment();
+    fullPictureCommentsContainer.append(commentsTemporaryFragment2);
 
-    const commentText = document.createElement('p');
-    commentText.classList.add('social__text');
-    commentText.textContent = message;
-    newComment.append(commentText);
-
-    commentsTemporaryFragment.append(newComment);
+    if (comments.length === fullPictureCommentsContainer.children.length) {
+      fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
+    }
   });
 
-  fullPictureCommentsContainer.append(commentsTemporaryFragment);
 };
 
-export {renderFullPicture};
+export {fullPicture, renderFullPicture, fullPictureCommentsContainer};

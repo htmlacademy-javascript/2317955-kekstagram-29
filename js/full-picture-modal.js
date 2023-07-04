@@ -1,16 +1,14 @@
 import {picturesData} from './main.js';
-import {renderFullPicture} from './render-full-picture.js';
+import {fullPicture, renderFullPicture} from './render-full-picture.js';
+
 
 const picturesContainer = document.querySelector('.pictures');
-const fullPicture = document.querySelector('.big-picture');
 const fullPictureCloseBtn = fullPicture.querySelector('.big-picture__cancel');
-
-
 const openFullPicture = (evt) => {
   evt.preventDefault();
 
   const picture = evt.target.closest('.picture');
-  const pictureData = picturesData.find((date) => date.id === +picture.dataset.pictureId);
+  const pictureData = picturesData.find((datum) => datum.id === +picture.dataset.pictureId);
 
   renderFullPicture(pictureData);
 
@@ -21,7 +19,7 @@ const openFullPicture = (evt) => {
 const closeFullPicture = () => {
   fullPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  picturesContainer.addEventListener('click', onPicturesContainer);
+  picturesContainer.addEventListener('click', onPicturesContainerClick);
 };
 
 const onDocumentEscape = (evt) => {
@@ -33,16 +31,17 @@ const onDocumentEscape = (evt) => {
 
 const onFullPictureCloseButton = () => {
   closeFullPicture();
+  // fullPictureCommentsLoadBtn.removeEventListener('click', onFullPictureCommentsLoadBtn);
   document.removeEventListener('keydown', onDocumentEscape);
   fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
 };
 
-const onPicturesContainer = (evt) => {
+function onPicturesContainerClick (evt) {
   openFullPicture(evt);
   document.addEventListener('keydown', onDocumentEscape);
   fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
-  picturesContainer.removeEventListener('click', onPicturesContainer); // это излишнее удаление обработчика или норм? мы же как бы не можем им воспользоваться, когда открыт попап, зачем его оставлять в памяти?
-};
+  picturesContainer.removeEventListener('click', onPicturesContainerClick);
+}
 
 
-export {onPicturesContainer};
+export {onPicturesContainerClick, fullPicture};
