@@ -68,8 +68,9 @@ const makeElement = (tagName, className, text) => {
   if (text) {
     if (tagName === 'img') {
       someElement.alt = text;
+    } else {
+      someElement.textContent = text;
     }
-    someElement.textContent = text;
   }
 
   return someElement;

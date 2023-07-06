@@ -26,4 +26,4 @@ const renderPictures = (data) => {
 };
 
 
-export {renderPictures};
+export {renderPictures, picturesContainer};
