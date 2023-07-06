@@ -1,48 +1,83 @@
 import {picturesData} from './main.js';
+import {picturesContainer} from './render-pictures.js';
 import {renderFullPicture} from './render-full-picture.js';
+import {SHOWN_COMMENTS_AMOUNT} from './constants.js';
 
-const picturesContainer = document.querySelector('.pictures');
 const fullPicture = document.querySelector('.big-picture');
 const fullPictureCloseBtn = fullPicture.querySelector('.big-picture__cancel');
+const commentsContainer = fullPicture.querySelector('.social__comments');
+const allComments = commentsContainer.children;
+const commentsLoadBtn = fullPicture.querySelector('.social__comments-loader');
+const commentCount = fullPicture.querySelector('.social__comment-count').firstChild;
+let firstHiddenCommentIndex;
 
+const getFullPictureData = (evt) => {
+  const picture = evt.target.closest('.picture');
+  const pictureData = picturesData.find((datum) => datum.id === +picture.dataset.pictureId);
+  return pictureData;
+};
 
+// Обязательно ли эта функция должна называться onPicturesContainer чтобы соблюдать критерий Д4 или не обязательно? По сути она передается в обработчик и больше ни с каких других элементов вызвана не может быть... но тогда по ней не очевидно, что она делает
 const openFullPicture = (evt) => {
   evt.preventDefault();
-
-  const picture = evt.target.closest('.picture');
-  const pictureData = picturesData.find((date) => date.id === +picture.dataset.pictureId);
-
+  firstHiddenCommentIndex = SHOWN_COMMENTS_AMOUNT;
+  const pictureData = getFullPictureData(evt);
   renderFullPicture(pictureData);
 
   fullPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
+
+  fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
+  if (allComments.length > SHOWN_COMMENTS_AMOUNT) {
+    commentsLoadBtn.addEventListener('click', onCommentsLoadBtnClick);
+  }
+  document.addEventListener('keydown', onDocumentEscape);
+
+  picturesContainer.removeEventListener('click', openFullPicture);
 };
 
 const closeFullPicture = () => {
   fullPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  picturesContainer.addEventListener('click', onPicturesContainer);
+
+  fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
+  commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
+  document.removeEventListener('keydown', onDocumentEscape);
+
+  picturesContainer.addEventListener('click', openFullPicture);
 };
 
-const onDocumentEscape = (evt) => {
+function onDocumentEscape (evt) {
   if(evt.key === 'Escape') {
     evt.preventDefault();
     closeFullPicture();
   }
-};
+}
 
-const onFullPictureCloseButton = () => {
+function onFullPictureCloseButton () {
   closeFullPicture();
-  document.removeEventListener('keydown', onDocumentEscape);
-  fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
+}
+
+// эту функцию хочется убрать в модуль render-comments, но для нее нужно иметь доступ к переменной firstHiddenCommentIndex. Если ее экспортировать, то нельзя изменять, а если объявлять в модуле render-comments, то она не перезаписывается в момент открытия окна. Как быть?
+function onCommentsLoadBtnClick () {
+  const breakpoint = Math.min(firstHiddenCommentIndex + SHOWN_COMMENTS_AMOUNT, allComments.length) ;
+  for (let i = firstHiddenCommentIndex; i < breakpoint ; i++) {
+    allComments.item(i).classList.remove('hidden');
+  }
+  if (breakpoint === allComments.length) {
+    firstHiddenCommentIndex = SHOWN_COMMENTS_AMOUNT;
+    fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
+    commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
+  } else {
+    firstHiddenCommentIndex = breakpoint;
+  }
+  commentCount.textContent = `${breakpoint} из `;
+}
+
+export {
+  fullPicture,
+  commentsContainer,
+  allComments,
+  commentCount,
+  openFullPicture
 };
-
-const onPicturesContainer = (evt) => {
-  openFullPicture(evt);
-  document.addEventListener('keydown', onDocumentEscape);
-  fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
-  picturesContainer.removeEventListener('click', onPicturesContainer); // это излишнее удаление обработчика или норм? мы же как бы не можем им воспользоваться, когда открыт попап, зачем его оставлять в памяти?
-};
-
-
-export {onPicturesContainer};
