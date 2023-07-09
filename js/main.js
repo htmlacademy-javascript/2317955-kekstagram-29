@@ -2,6 +2,8 @@ import {getRandomPicturesData} from './get-random-pictures-data.js';
 import {FOTOS_AMOUNT} from './constants.js';
 import {renderPictures, picturesContainer} from './render-pictures.js';
 import {openFullPicture} from './full-picture-modal.js';
+import './upload-foto.js';
+import './validation.js';
 
 const picturesData = getRandomPicturesData(FOTOS_AMOUNT);
 renderPictures(picturesData);
