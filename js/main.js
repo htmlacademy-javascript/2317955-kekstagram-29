@@ -4,6 +4,7 @@ import {renderPictures, picturesContainer} from './render-pictures.js';
 import {openFullPicture} from './full-picture-modal.js';
 import './upload-foto.js';
 import './form-validation.js';
+import './edit-foto.js';
 
 const picturesData = getRandomPicturesData(FOTOS_AMOUNT);
 renderPictures(picturesData);

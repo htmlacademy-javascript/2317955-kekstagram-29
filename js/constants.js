@@ -5,3 +5,4 @@ export const SHOWN_COMMENTS_AMOUNT = 5;
 export const MAX_HASHTAG_LENGTH = 19;
 export const MAX_HASHTAG_AMOUNT = 5;
 export const MAX_DESCRIPTION_LENGTH = 140;
+export const SCALE_STEP = 25;

@@ -3,6 +3,7 @@ const uploadModal = form.querySelector('.img-upload__overlay');
 const imgInput = form.querySelector('.img-upload__input');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
+
 const submitBtn = form.querySelector('.img-upload__submit');
 const formCloseBtn = form.querySelector('.img-upload__cancel');
 
@@ -20,6 +21,7 @@ const resetForm = () => {
   + поля для ввода хэш-тегов и комментария очищаются;
   + поле загрузки фотографии, стилизованное под букву «О» в логотипе, очищается.
   */
+  form.querySelector('.effects__radio[value = "none"]').checked = true;
   hashtagInput.value = '';
   commentInput.value = '';
   imgInput.value = '';
