@@ -49,7 +49,6 @@ noUiSlider.create(effectSlider, {
 
 effectSlider.noUiSlider.on('update', () => {
   effectInput.value = effectSlider.noUiSlider.get();
-  console.log('effectInput.value :>> ', effectInput.value);
   let value;
   for (const radio of effectRadioCollection) {
     if (radio.checked) {
@@ -57,7 +56,6 @@ effectSlider.noUiSlider.on('update', () => {
     }
   }
 
-  console.log('value :>> ', value);
   switch (value) {
     case 'none':
       preview.style.filter = '';
@@ -81,57 +79,73 @@ effectSlider.noUiSlider.on('update', () => {
 });
 
 form.addEventListener('change', () => {
-  if (form.querySelector('.effects__radio[value = "none"]').checked) {
+  let value;
+  for (const radio of effectRadioCollection) {
+    if (radio.checked) {
+      value = radio.value;
+    }
+  }
+
+  if (value === 'none') {
     effectSliderComtainer.classList.add('hidden');
   } else {
     effectSliderComtainer.classList.remove('hidden');
   }
 
-  if (form.querySelector('.effects__radio[value = "chrome"]').checked | form.querySelector('.effects__radio[value = "sepia"]').checked) {
-    effectSlider.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 1,
-      },
-      start: 1,
-      step: 0.1,
-    });
+  switch (value) {
+    case 'none':
+      break;
+    case 'chrome':
+      effectSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+      });
+      break;
+    case 'sepia':
+      effectSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+      });
+      break;
+    case 'marvin':
+      effectSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 100,
+        },
+        start: 100,
+        step: 1,
+      });
+      break;
+    case 'phobos':
+      effectSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 3,
+        },
+        start: 3,
+        step: 0.1,
+      });
+      break;
+    case 'heat':
+      effectSlider.noUiSlider.updateOptions({
+        range: {
+          min: 1,
+          max: 3,
+        },
+        start: 3,
+        step: 0.1,
+      });
+      break;
   }
-
-  if (form.querySelector('.effects__radio[value = "marvin"]').checked) {
-    effectSlider.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 100,
-      },
-      start: 100,
-      step: 1,
-    });
-  }
-
-  if (form.querySelector('.effects__radio[value = "phobos"]').checked) {
-    effectSlider.noUiSlider.updateOptions({
-      range: {
-        min: 0,
-        max: 3,
-      },
-      start: 3,
-      step: 0.1,
-    });
-  }
-
-  if (form.querySelector('.effects__radio[value = "heat"]').checked) {
-    effectSlider.noUiSlider.updateOptions({
-      range: {
-        min: 1,
-        max: 3,
-      },
-      start: 3,
-      step: 0.1,
-    });
-  }
-
-
 });
 
 /* Настройки эффектов:
