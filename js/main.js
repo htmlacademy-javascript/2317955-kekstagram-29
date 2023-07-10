@@ -3,7 +3,7 @@ import {FOTOS_AMOUNT} from './constants.js';
 import {renderPictures, picturesContainer} from './render-pictures.js';
 import {openFullPicture} from './full-picture-modal.js';
 import './upload-foto.js';
-import './validation.js';
+import './form-validation.js';
 
 const picturesData = getRandomPicturesData(FOTOS_AMOUNT);
 renderPictures(picturesData);

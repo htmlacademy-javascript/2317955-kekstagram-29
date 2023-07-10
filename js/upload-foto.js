@@ -1,10 +1,10 @@
 const form = document.querySelector('.img-upload__form');
 const uploadModal = form.querySelector('.img-upload__overlay');
-const inputImg = form.querySelector('.img-upload__input');
-const formCloseBtn = form.querySelector('.img-upload__cancel');
-const hashTagInput = form.querySelector('.text__hashtags');
+const imgInput = form.querySelector('.img-upload__input');
+const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
-// const submitBtn = form.querySelector('.img-upload__submit');
+const submitBtn = form.querySelector('.img-upload__submit');
+const formCloseBtn = form.querySelector('.img-upload__cancel');
 
 const openModal = () => {
   uploadModal.classList.remove('hidden');
@@ -20,12 +20,12 @@ const resetForm = () => {
   + поля для ввода хэш-тегов и комментария очищаются;
   + поле загрузки фотографии, стилизованное под букву «О» в логотипе, очищается.
   */
-  hashTagInput.value = '';
+  hashtagInput.value = '';
   commentInput.value = '';
-  inputImg.value = '';
+  imgInput.value = '';
 };
 
-const closeUploadModal = () => {
+const closeModal = () => {
   uploadModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetForm();
@@ -34,17 +34,16 @@ const closeUploadModal = () => {
 };
 
 function onCloseBtnClick () {
-  closeUploadModal();
+  closeModal();
 }
 
 function onDocumentEscape (evt) {
-  // как это надо было реализовать через evt.stopPropagation?
-  if (commentInput === document.activeElement || hashTagInput === document.activeElement) {
-    return;
-  }
-  if(evt.key === 'Escape') {
-    evt.preventDefault();
-    closeUploadModal();
+  // в задании предлагалось реализовать это через evt.stopPropagation?, как именно?..
+  if (commentInput !== document.activeElement && hashtagInput !== document.activeElement) {
+    if(evt.key === 'Escape') {
+      evt.preventDefault();
+      closeModal();
+    }
   }
 }
 
@@ -52,7 +51,12 @@ const onInputImgChange = () => {
   openModal();
 };
 
-inputImg.addEventListener('change', onInputImgChange);
+imgInput.addEventListener('change', onInputImgChange);
 
 
-export {form};
+export {
+  form,
+  submitBtn,
+  hashtagInput,
+  commentInput
+};
