@@ -1,6 +1,6 @@
 import {makeElement} from './util.js';
 import {SHOWN_COMMENTS_AMOUNT} from './constants.js';
-import {allComments} from './full-picture-modal.js';
+import {allComments, fullPicture, commentsLoadBtn, commentCount} from './full-picture-modal.js';
 
 
 const renderComment = ({avatar, name, message}) => {
@@ -33,5 +33,19 @@ const hideSomeComments = () => {
   }
 };
 
+function onCommentsLoadBtnClick () {
+  const firstHiddenComment = fullPicture.querySelector('.social__comment.hidden');
+  const firstHiddenCommentIndex = [...allComments].indexOf(firstHiddenComment);
+  const breakpoint = Math.min(firstHiddenCommentIndex + SHOWN_COMMENTS_AMOUNT, allComments.length) ;
+  for (let i = firstHiddenCommentIndex; i < breakpoint ; i++) {
+    allComments.item(i).classList.remove('hidden');
+  }
+  if (breakpoint === allComments.length) {
+    fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
+    commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
+  }
+  commentCount.textContent = `${breakpoint} из `;
+}
 
-export {renderAllComments, hideSomeComments};
+
+export {renderAllComments, hideSomeComments, onCommentsLoadBtnClick};
