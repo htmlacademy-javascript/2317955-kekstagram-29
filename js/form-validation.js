@@ -1,5 +1,5 @@
-import {form, submitBtn, hashtagInput, commentInput} from './upload-foto.js';
-import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, MAX_DESCRIPTION_LENGTH} from './constants.js';
+import {form, submitBtn, hashtagInput, commentInput} from './uploading-foto-modal.js';
+import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, MAX_DESCRIPTION_LENGTH, HASHTAG_RULE_REGEX} from './constants.js';
 
 
 const pristine = new Pristine(form, {
@@ -17,9 +17,8 @@ const isEveryHashtagValid = (value) => {
   if (value === '') {
     return true;
   }
-  const hashtagRule = new RegExp(`^#[a-zа-яё0-9]{1,${MAX_HASHTAG_LENGTH}}$`, 'i');
   const hashtags = getHashtagsArray(value);
-  return hashtags.every((hashtag) => hashtagRule.test(hashtag));
+  return hashtags.every((hashtag) => HASHTAG_RULE_REGEX.test(hashtag));
 };
 pristine.addValidator(
   hashtagInput,
@@ -57,13 +56,14 @@ pristine.addValidator(
 );
 
 
-const isEverythingValid = () => pristine.validate();
 const disableSubmitBtn = () => {
-  submitBtn.disabled = !isEverythingValid();
+  submitBtn.disabled = !pristine.validate();
 };
+
 hashtagInput.addEventListener('input', () => {
   disableSubmitBtn();
 });
+
 commentInput.addEventListener('input', () => {
   disableSubmitBtn();
 });

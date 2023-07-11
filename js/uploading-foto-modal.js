@@ -3,9 +3,12 @@ const uploadModal = form.querySelector('.img-upload__overlay');
 const imgInput = form.querySelector('.img-upload__input');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
-
 const submitBtn = form.querySelector('.img-upload__submit');
 const formCloseBtn = form.querySelector('.img-upload__cancel');
+const preview = form.querySelector('.img-upload__preview');
+const scaleInput = form.querySelector('.scale__control--value');
+const effectSliderComtainer = form.querySelector('.img-upload__effect-level');
+
 
 const openModal = () => {
   uploadModal.classList.remove('hidden');
@@ -15,22 +18,18 @@ const openModal = () => {
 };
 
 const resetForm = () => {
-  /*
-  - масштаб возвращается к 100%;
-  - эффект сбрасывается на «Оригинал»;
-  + поля для ввода хэш-тегов и комментария очищаются;
-  + поле загрузки фотографии, стилизованное под букву «О» в логотипе, очищается.
-  */
+  scaleInput.value = '100%';
+  preview.style.transform = 'scale(1)';
   form.querySelector('.effects__radio[value = "none"]').checked = true;
+  imgInput.value = '';
   hashtagInput.value = '';
   commentInput.value = '';
-  imgInput.value = '';
 };
 
 const closeModal = () => {
+  resetForm();
   uploadModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  resetForm();
   formCloseBtn.removeEventListener('click', onCloseBtnClick);
   document.removeEventListener('keydown', onDocumentEscape);
 };
@@ -58,7 +57,11 @@ imgInput.addEventListener('change', onInputImgChange);
 
 export {
   form,
+  imgInput,
   submitBtn,
   hashtagInput,
-  commentInput
+  commentInput,
+  preview,
+  scaleInput,
+  effectSliderComtainer
 };
