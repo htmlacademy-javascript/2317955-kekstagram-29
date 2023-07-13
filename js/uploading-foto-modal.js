@@ -1,3 +1,6 @@
+import {resetValidator} from './form-validation.js';
+import {isTextFieldActive} from './util.js';
+
 const form = document.querySelector('.img-upload__form');
 const uploadModal = form.querySelector('.img-upload__overlay');
 const imgInput = form.querySelector('.img-upload__input');
@@ -24,6 +27,7 @@ const resetForm = () => {
   imgInput.value = '';
   hashtagInput.value = '';
   commentInput.value = '';
+  resetValidator();
 };
 
 const closeModal = () => {
@@ -39,8 +43,7 @@ function onCloseBtnClick () {
 }
 
 function onDocumentEscape (evt) {
-  // в задании предлагалось реализовать это через evt.stopPropagation?, как именно?..
-  if (commentInput !== document.activeElement && hashtagInput !== document.activeElement) {
+  if (!isTextFieldActive()) {
     if(evt.key === 'Escape') {
       evt.preventDefault();
       closeModal();

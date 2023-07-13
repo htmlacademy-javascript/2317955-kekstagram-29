@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Катерина Евтухова](https://up.htmlacademy.ru/javascript/29/user/2317955).
-* Наставник: [Александр Соболев](https://htmlacademy.ru/profile/sanjoyz).
+* Наставник: [Артем Мошкин](https://htmlacademy.ru/profile/id2088751).
 
 ---
 

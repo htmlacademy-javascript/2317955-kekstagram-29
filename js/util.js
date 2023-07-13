@@ -76,4 +76,11 @@ const makeElement = (tagName, className, text) => {
   return someElement;
 };
 
-export {getRandomElement, getRandomIntegerNotNegativeNumber, makeElement};
+const isTextFieldActive = () => {
+  if (document.activeElement.type === 'text' || document.activeElement.type === 'textarea') {
+    return true;
+  }
+  return false;
+};
+
+export {getRandomElement, getRandomIntegerNotNegativeNumber, makeElement, isTextFieldActive};
