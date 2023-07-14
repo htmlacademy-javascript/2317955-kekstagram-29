@@ -66,5 +66,6 @@ export {
   commentInput,
   preview,
   scaleInput,
-  effectSliderComtainer
+  effectSliderComtainer,
+  closeModal,
 };
