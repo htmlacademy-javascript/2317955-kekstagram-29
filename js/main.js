@@ -1,14 +1,13 @@
 import {getRandomPicturesData} from './get-random-pictures-data.js';
 import {FOTOS_AMOUNT} from './constants.js';
-import {renderPictures, picturesContainer} from './render-pictures.js';
-import {openFullPicture} from './full-picture-modal.js';
-import './upload-foto.js';
+import {renderPictures} from './render-pictures.js';
+// import {openFullPicture} from './full-picture-modal.js';
 import './form-validation.js';
+import './edit-foto.js';
+import './scale-preview.js';
 
 const picturesData = getRandomPicturesData(FOTOS_AMOUNT);
 renderPictures(picturesData);
-
-picturesContainer.addEventListener('click', openFullPicture);
 
 
 export {picturesData};

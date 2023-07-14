@@ -15,7 +15,7 @@ const getFullPictureData = (evt) => {
   const picture = evt.target.closest('.picture');
 
   if (!picture) {
-    return false;
+    return;
   }
 
   const pictureId = +picture.dataset.pictureId;
