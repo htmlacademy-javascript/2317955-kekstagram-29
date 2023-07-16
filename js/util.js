@@ -1,4 +1,8 @@
+const ALERT_SHOW_TIME = 5000;
+
 const makeElement = (tagName, className, text) => {
+
+  // TODO refactor makeElement using other variant
   const someElement = document.createElement(tagName);
   someElement.classList.add(className);
 
@@ -14,15 +18,18 @@ const makeElement = (tagName, className, text) => {
 };
 
 const isTextFieldActive = () => {
+  // TODO find active element type-text bu other way
   if (document.activeElement.type === 'text' || document.activeElement.type === 'textarea') {
     return true;
   }
   return false;
 };
 
-const ALERT_SHOW_TIME = 5000;
+
 const showAlert = (message) => {
-  const alertContainer = document.createElement('div');
+  const alertContainer = makeElement('div', 'error-message', message);
+
+  // TODO make css style for error message
   alertContainer.style.zIndex = '100';
   alertContainer.style.position = 'absolute';
   alertContainer.style.left = '0';
@@ -33,7 +40,6 @@ const showAlert = (message) => {
   alertContainer.style.textAlign = 'center';
   alertContainer.style.backgroundColor = 'red';
 
-  alertContainer.textContent = message;
 
   document.body.append(alertContainer);
 

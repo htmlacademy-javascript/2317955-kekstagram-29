@@ -1,16 +1,16 @@
 import {resetValidator} from './form-validation.js';
 import {isTextFieldActive} from './util.js';
+import {setFormSubmit} from './uploading-picture-form.js';
+
 
 const form = document.querySelector('.img-upload__form');
 const uploadModal = form.querySelector('.img-upload__overlay');
 const imgInput = form.querySelector('.img-upload__input');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
-const submitBtn = form.querySelector('.img-upload__submit');
 const formCloseBtn = form.querySelector('.img-upload__cancel');
 const preview = form.querySelector('.img-upload__preview');
 const scaleInput = form.querySelector('.scale__control--value');
-const effectSliderComtainer = form.querySelector('.img-upload__effect-level');
 
 
 const openModal = () => {
@@ -57,15 +57,16 @@ const onInputImgChange = () => {
 
 imgInput.addEventListener('change', onInputImgChange);
 
+const onFormSubmit = (evt) => setFormSubmit(evt, closeModal);
+form.addEventListener('submit', onFormSubmit);
+
 
 export {
   form,
   imgInput,
-  submitBtn,
   hashtagInput,
   commentInput,
   preview,
   scaleInput,
-  effectSliderComtainer,
   closeModal,
 };

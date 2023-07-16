@@ -1,4 +1,4 @@
-// import {form, submitBtn, hashtagInput, commentInput} from './uploading-foto-modal.js';
+// import {form, submitBtn, hashtagInput, commentInput} from './uploading-picture-modal.js';
 import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
 const form = document.querySelector('.img-upload__form');
 const hashtagInput = form.querySelector('.text__hashtags');

@@ -1,4 +1,4 @@
-import {form,preview, scaleInput} from './uploading-foto-modal.js';
+import {form, preview, scaleInput} from './uploading-picture-modal.js';
 import {SCALE_STEP} from './constants.js';
 
 const MAX_SCALE_VALUE = 100;
