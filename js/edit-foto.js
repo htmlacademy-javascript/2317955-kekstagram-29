@@ -1,6 +1,7 @@
-import {form, hashtagInput, commentInput, preview, effectSliderComtainer} from './uploading-foto-modal.js';
+import {form, hashtagInput, commentInput, preview} from './uploading-picture-modal.js';
 import {getEffectSliderOptions, getEffecFiltertOption} from './data.js';
 
+const effectSliderComtainer = form.querySelector('.img-upload__effect-level');
 const effectSlider = effectSliderComtainer.querySelector('.effect-level__slider');
 const effectLevelInput = effectSliderComtainer.querySelector('.effect-level__value');
 

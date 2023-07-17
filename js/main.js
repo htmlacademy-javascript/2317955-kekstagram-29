@@ -1,13 +1,19 @@
-import {getRandomPicturesData} from './get-random-pictures-data.js';
-import {FOTOS_AMOUNT} from './constants.js';
+import {getData} from './network.js';
 import {renderPictures} from './render-pictures.js';
-// import {openFullPicture} from './full-picture-modal.js';
-import './form-validation.js';
+import {showAlert} from './util.js';
+import './uploading-picture-modal.js';
 import './edit-foto.js';
 import './scale-preview.js';
 
-const picturesData = getRandomPicturesData(FOTOS_AMOUNT);
-renderPictures(picturesData);
+
+let picturesData;
+
+try {
+  picturesData = await getData();
+  renderPictures(picturesData);
+} catch (err) {
+  showAlert(err.message);
+}
 
 
 export {picturesData};

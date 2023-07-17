@@ -1,5 +1,9 @@
-import {form, submitBtn, hashtagInput, commentInput} from './uploading-foto-modal.js';
-import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, HASHTAG_RULE_REGEX} from './constants.js';
+// import {form, submitBtn, hashtagInput, commentInput} from './uploading-picture-modal.js';
+import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
+const form = document.querySelector('.img-upload__form');
+const hashtagInput = form.querySelector('.text__hashtags');
+const commentInput = form.querySelector('.text__description');
+const submitBtn = form.querySelector('.img-upload__submit');
 
 
 const pristine = new Pristine(form, {
@@ -53,12 +57,12 @@ pristine.addValidator(
   true,
 );
 
-// const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
-// pristine.addValidator(
-//   commentInput,
-//   isDescriptionValid,
-//   `Максимальная длина сообщения ${MAX_DESCRIPTION_LENGTH} символов`
-// );
+const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
+pristine.addValidator(
+  commentInput,
+  isDescriptionValid,
+  `Максимальная длина сообщения ${MAX_DESCRIPTION_LENGTH} символов`
+);
 
 
 const disableSubmitBtn = () => {
@@ -75,6 +79,8 @@ commentInput.addEventListener('input', () => {
 
 const resetValidator = () => pristine.reset();
 
+const isValid = pristine.validate;
 
-export {resetValidator};
+
+export {resetValidator, isValid};
 
