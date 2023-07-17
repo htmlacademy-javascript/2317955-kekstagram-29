@@ -12,9 +12,8 @@ let picturesData;
 try {
   picturesData = await getData();
   renderPictures(picturesData);
-
   document.querySelector('.img-filters').classList.remove('img-filters--inactive');
-  setOnFiltersClick(renderPictures);
+  setOnFiltersClick(renderPictures, picturesData);
 } catch (err) {
   showAlert(err.message);
 }
