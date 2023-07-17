@@ -2,12 +2,10 @@ import { picturesData } from './main.js';
 import {makeIdGenerator, debounce } from './util.js';
 
 const RERENDER_DELAY = 500;
-const filtersForm = document.querySelector('.img-filters__form');
-const btnDefault = filtersForm.querySelector('#filter-default');
-const btnRandom = filtersForm.querySelector('#filter-random');
-const btnPopular = filtersForm.querySelector('#filter-discussed');
+const form = document.querySelector('.img-filters__form');
+const buttons = form.querySelectorAll('.img-filters__button');
 
-let currentActiveBtn = btnDefault;
+let currentActiveBtn = form.querySelector('#filter-default');
 
 const getFilterData = (evt) => {
   switch (evt.target.id) {
@@ -31,7 +29,6 @@ const getFilterData = (evt) => {
   }
 };
 
-
 const filterPictures = (evt, cb) => {
   currentActiveBtn.classList.remove('img-filters__button--active');
   currentActiveBtn = evt.target;
@@ -45,19 +42,10 @@ const filterPictures = (evt, cb) => {
 };
 
 
-const setDafaultFilterClick = (cb) => {
+const setOnFiltersClick = (cb) => {
   const onFilterBtnClick = debounce((evt) => filterPictures(evt, cb), RERENDER_DELAY);
-  btnDefault.addEventListener('click', onFilterBtnClick);
+  buttons.forEach((button) => button.addEventListener('click', onFilterBtnClick));
 };
 
-const setRandomFilterClick = (cb) => {
-  const onFilterBtnClick = debounce((evt) => filterPictures(evt, cb), RERENDER_DELAY);
-  btnRandom.addEventListener('click', onFilterBtnClick);
-};
 
-const setPopularFilterClick = (cb) => {
-  const onFilterBtnClick = debounce((evt) => filterPictures(evt, cb), RERENDER_DELAY);
-  btnPopular.addEventListener('click', onFilterBtnClick);
-};
-
-export {setDafaultFilterClick, setRandomFilterClick, setPopularFilterClick};
+export {setOnFiltersClick};
