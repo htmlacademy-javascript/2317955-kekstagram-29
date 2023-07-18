@@ -34,9 +34,6 @@ const filterPictures = (evt, cb, picturesData) => {
     currentActiveButton = evt.target;
     currentActiveButton.classList.add('img-filters__button--active');
 
-    const previousPictures = document.querySelectorAll('.picture');
-    previousPictures.forEach((previousPicture) => previousPicture.remove());
-
     const filtersData = getFiltersData(evt, picturesData);
     cb(filtersData);
   }
@@ -44,7 +41,11 @@ const filterPictures = (evt, cb, picturesData) => {
 
 
 const setOnFiltersClick = (cb, picturesData) => {
-  const makeDebouncer = debounce((data) => cb(data), RERENDER_DELAY);
+  const makeDebouncer = debounce((data) => {
+    const previousPictures = document.querySelectorAll('.picture');
+    previousPictures.forEach((previousPicture) => previousPicture.remove());
+    cb(data);
+  }, RERENDER_DELAY);
   const onFilterBtnClick = (evt) => filterPictures(evt, makeDebouncer, picturesData);
   form.addEventListener('click', onFilterBtnClick);
 };
