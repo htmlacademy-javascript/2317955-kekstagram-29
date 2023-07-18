@@ -1,7 +1,7 @@
 import {makeIdGenerator, debounce} from './util.js';
 import {FOTOS_AMOUNT} from './constants.js';
 
-const RANDOM_FOROS_AMOUNT = 10;
+const RANDOM_FOTOS_AMOUNT = 10;
 const RERENDER_DELAY = 500;
 const form = document.querySelector('.img-filters__form');
 let currentActiveButton = form.querySelector('#filter-default');
@@ -11,9 +11,9 @@ const getFiltersData = (evt, picturesData) => {
 
     case 'filter-random':
       return function() {
-        const generateId = makeIdGenerator(1, FOTOS_AMOUNT);
-        const randomIds = Array.from({length: RANDOM_FOROS_AMOUNT}, generateId);
-        return picturesData.filter((picture) => randomIds.includes(picture.id));
+        const generateId = makeIdGenerator(0, FOTOS_AMOUNT - 1);
+        const randomIds = Array.from({length: RANDOM_FOTOS_AMOUNT}, generateId);
+        return Array.from(randomIds, (id) => picturesData[id]);
       }();
 
     case 'filter-discussed':
