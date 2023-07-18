@@ -4,7 +4,6 @@ import {FOTOS_AMOUNT} from './constants.js';
 const RANDOM_FOROS_AMOUNT = 10;
 const RERENDER_DELAY = 500;
 const form = document.querySelector('.img-filters__form');
-const buttons = form.querySelectorAll('.img-filters__button');
 let currentActiveButton = form.querySelector('#filter-default');
 
 const getFiltersData = (evt, picturesData) => {
@@ -31,7 +30,7 @@ const getFiltersData = (evt, picturesData) => {
 
 const filterPictures = (evt, cb, picturesData) => {
   currentActiveButton.classList.remove('img-filters__button--active');
-  currentActiveButton = evt.target;
+  currentActiveButton = evt.target.closest('.img-filters__button');
   currentActiveButton.classList.add('img-filters__button--active');
 
   const previousPictures = document.querySelectorAll('.picture');
@@ -41,10 +40,9 @@ const filterPictures = (evt, cb, picturesData) => {
   cb(filtersData);
 };
 
-
 const setOnFiltersClick = (cb, picturesData) => {
   const onFilterBtnClick = debounce((evt) => filterPictures(evt, cb, picturesData), RERENDER_DELAY);
-  buttons.forEach((button) => button.addEventListener('click', onFilterBtnClick));
+  form.addEventListener('click', onFilterBtnClick);
 };
 
 
