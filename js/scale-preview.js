@@ -1,18 +1,24 @@
 import {form, preview, scaleInput} from './uploading-picture-modal.js';
 import {SCALE_STEP} from './constants.js';
 
-const MAX_SCALE_VALUE = SCALE_STEP * 4;
-const MIN_SCALE_VALUE = SCALE_STEP * 1;
+const minScaleValue = SCALE_STEP * 1;
+const maxScaleValue = SCALE_STEP * 4;
 
 const scalingUpButton = form.querySelector('.scale__control--bigger');
 const scalingDownButton = form.querySelector('.scale__control--smaller');
 
+const getNewScaleValue = (button, currentValue) => {
+  switch (button) {
+    case scalingUpButton:
+      return Math.min(maxScaleValue, currentValue + SCALE_STEP);
+    case scalingDownButton:
+      return Math.max(minScaleValue, currentValue - SCALE_STEP);
+  }
+};
 
 const onScalingButton = (evt) => {
   const scaleValue = parseInt(scaleInput.value, 10);
-  const newScaleValue = (evt.target === scalingUpButton) ?
-    Math.min(MAX_SCALE_VALUE, scaleValue + SCALE_STEP) :
-    Math.max(MIN_SCALE_VALUE, scaleValue - SCALE_STEP);
+  const newScaleValue = getNewScaleValue(evt.target, scaleValue);
   scaleInput.value = `${newScaleValue}%`;
   preview.style.transform = `scale(${newScaleValue / 100})`;
 };
