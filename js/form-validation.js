@@ -5,6 +5,55 @@ const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
 const submitBtn = form.querySelector('.img-upload__submit');
 
+const getHashtagAmountMessage = (number) => {
+  switch (new Intl.PluralRules('ru-RU').select(number)) {
+    case 'one': {
+      return `${number} хештег`;
+    }
+    case 'few': {
+      return `${number} хештега`;
+    }
+    case 'many': {
+      return `${number} хештегов`;
+    }
+    case 'dafault': {
+      return `${number} хештега`;
+    }
+  }
+};
+const getLettersAmountMessage = (number) => {
+  switch (new Intl.PluralRules('ru-RU').select(number)) {
+    case 'one': {
+      return `${number} буквы`;
+    }
+    case 'few': {
+      return `${number} букв`;
+    }
+    case 'many': {
+      return `${number} букв`;
+    }
+    case 'dafault': {
+      return `${number} букв`;
+    }
+  }
+};
+const getSymbolsAmountMessage = (number) => {
+  switch (new Intl.PluralRules('ru-RU').select(number)) {
+    case 'one': {
+      return `${number} символ`;
+    }
+    case 'few': {
+      return `${number} символа`;
+    }
+    case 'many': {
+      return `${number} символов`;
+    }
+    case 'dafault': {
+      return `${number} символа`;
+    }
+  }
+};
+
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
@@ -15,7 +64,7 @@ const pristine = new Pristine(form, {
   // errorTextClass: '' // Класс для элемента с текстом ошибки
 });
 
-const getHashtagsArray = (value) => value.replace(/\s+/g, ' ').trim().split(' ');
+const getHashtagsArray = (value) => value.toLowerCase().replace(/\s+/g, ' ').trim().split(' ');
 
 const isHashtagAmountValid = (value) => {
   const hashtags = getHashtagsArray(value);
@@ -24,7 +73,7 @@ const isHashtagAmountValid = (value) => {
 pristine.addValidator(
   hashtagInput,
   isHashtagAmountValid,
-  `Максимум ${MAX_HASHTAG_AMOUNT} хештегов`,
+  `Максимум ${getHashtagAmountMessage(MAX_HASHTAG_AMOUNT)}`,
   3,
   true,
 );
@@ -39,15 +88,14 @@ const isEveryHashtagValid = (value) => {
 pristine.addValidator(
   hashtagInput,
   isEveryHashtagValid,
-  `Хештег должен начинаться с # и содержать не более ${MAX_HASHTAG_LENGTH} букв кирилицы и/или латинского алфавита`,
+  `Хештег должен начинаться с # и содержать не более ${getLettersAmountMessage(MAX_HASHTAG_LENGTH)} кирилицы и/или латинского алфавита`,
   2,
   true,
 );
 
 const isEveryHasgtagUnique = (value) => {
   const hashtags = getHashtagsArray(value);
-  const hashtagsNormalise = hashtags.map((hashtag) => hashtag.toLowerCase());
-  return hashtagsNormalise.length === new Set(hashtagsNormalise).size;
+  return hashtags.length === new Set(hashtags).size;
 };
 pristine.addValidator(
   hashtagInput,
@@ -61,25 +109,19 @@ const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
 pristine.addValidator(
   commentInput,
   isDescriptionValid,
-  `Максимальная длина сообщения ${MAX_DESCRIPTION_LENGTH} символов`
+  `Максимальная длина сообщения ${getSymbolsAmountMessage(MAX_DESCRIPTION_LENGTH)}`
 );
 
+const isValid = pristine.validate;
+const resetValidator = pristine.reset;
 
-const disableSubmitBtn = () => {
-  submitBtn.disabled = !pristine.validate();
+const onTextInputChange = () => {
+  submitBtn.disabled = !isValid();
 };
 
-hashtagInput.addEventListener('input', () => {
-  disableSubmitBtn();
-});
+hashtagInput.addEventListener('input', onTextInputChange);
 
-commentInput.addEventListener('input', () => {
-  disableSubmitBtn();
-});
-
-const resetValidator = () => pristine.reset();
-
-const isValid = pristine.validate;
+commentInput.addEventListener('input', onTextInputChange);
 
 
 export {resetValidator, isValid};

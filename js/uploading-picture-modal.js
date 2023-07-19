@@ -1,6 +1,7 @@
 import {resetValidator} from './form-validation.js';
 import {isTextFieldActive} from './util.js';
 import {setFormSubmit} from './uploading-picture-form.js';
+import {resetEffects} from './effects.js';
 
 const ACCEPTABLE_FILE_TYPES = ['jpg', 'jprg', 'png'];
 
@@ -19,16 +20,16 @@ const openModal = () => {
   uploadModal.classList.remove('hidden');
   document.body.classList.add('modal-open');
   formCloseBtn.addEventListener('click', onCloseBtnClick);
-  document.addEventListener('keydown', onDocumentEscape);
+  document.addEventListener('keydown', onEscapePress);
 };
 
 const resetForm = () => {
   scaleInput.value = '100%';
   preview.style.transform = 'scale(1)';
-  form.querySelector('.effects__radio[value = "none"]').checked = true;
   imgInput.value = '';
   hashtagInput.value = '';
   commentInput.value = '';
+  resetEffects();
   resetValidator();
 };
 
@@ -37,14 +38,14 @@ const closeModal = () => {
   uploadModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
   formCloseBtn.removeEventListener('click', onCloseBtnClick);
-  document.removeEventListener('keydown', onDocumentEscape);
+  document.removeEventListener('keydown', onEscapePress);
 };
 
 function onCloseBtnClick () {
   closeModal();
 }
 
-function onDocumentEscape (evt) {
+function onEscapePress (evt) {
   if (!isTextFieldActive()) {
     if(evt.key === 'Escape') {
       evt.preventDefault();
