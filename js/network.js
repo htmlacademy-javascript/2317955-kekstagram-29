@@ -1,12 +1,12 @@
 const BASE_URL = 'https://29.javascript.pages.academy/kekstagram';
 
-const LoadingMethod = {
-  GET: {
+const ApiOptions = {
+  FETCH: {
     route: '/data',
     method: 'GET',
     errorText: 'Не удалось загрузить данные. Попробуйте обновить страницу',
   },
-  POST: {
+  SEND: {
     route: '/',
     method: 'POST',
     errorText: 'Не удалось отправить форму. Попробуйте ещё раз',
@@ -14,9 +14,9 @@ const LoadingMethod = {
 };
 
 
-const load = async ({route, method, errorText}, body = null) => {
+const load = async ({route, method, errorText}, body) => {
   try {
-    const response = await fetch(`${BASE_URL}${route}`, {method, body});
+    const response = await fetch(`${BASE_URL}${route}`, {method, ...(body ? {body: body} : {})});
     if(!response.ok) {
       throw new Error();
     }
@@ -26,10 +26,21 @@ const load = async ({route, method, errorText}, body = null) => {
   }
 };
 
+// TODO here we can use classes to group those simillar functions:
+// class API {
+//   static fetch() {
+//     return fn(2);
+//   }
 
-const getData = () => load(LoadingMethod.GET);
+//   static send(body) {
+//     return fn(1, body)
+//   }
+// }
+// API.fetch()
 
-const sendData = (body) => load(LoadingMethod.POST, body);
+const getData = () => load(ApiOptions.FETCH);
+
+const sendData = (body) => load(ApiOptions.SEND, body);
 
 
 export {getData, sendData};

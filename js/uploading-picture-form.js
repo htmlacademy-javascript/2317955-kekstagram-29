@@ -4,11 +4,13 @@ import {showMessage, onEscapePress} from './errors.js';
 
 const submitBtn = document.querySelector('.img-upload__submit');
 
+
 const SubmitButtonText = {
   IDLE: 'Отправить',
   SENDING: 'Отправляю...'
 };
 
+// TODO here we can use classes to group those simillar functions
 const blockSubmitButton = () => {
   submitBtn.disabled = true;
   submitBtn.textContent = SubmitButtonText.SENDING;
@@ -22,17 +24,16 @@ const unblockSubmitButton = () => {
 
 const setFormSubmit = async (evt, onSuccess) => {
   evt.preventDefault();
-  if (isValid) {
+  if (isValid()) {
     blockSubmitButton();
     try {
       await sendData(new FormData(evt.target));
       onSuccess();
       showMessage('success');
-      document.addEventListener('keydown', onEscapePress);
     } catch (err) {
       showMessage('error');
-      document.addEventListener('keydown', onEscapePress);
     }
+    document.addEventListener('keydown', onEscapePress);
     unblockSubmitButton();
   }
 };

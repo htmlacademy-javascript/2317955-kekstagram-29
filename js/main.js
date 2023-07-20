@@ -5,7 +5,7 @@ import './uploading-picture-modal.js';
 import './scale-preview.js';
 import {setOnFiltersClick} from './filter-pictures.js';
 
-
+// TODO get rid of picturesData's export
 let picturesData;
 
 try {

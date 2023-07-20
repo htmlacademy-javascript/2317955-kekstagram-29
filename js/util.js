@@ -1,4 +1,4 @@
-const ALERT_SHOW_TIME = 5000;
+const ALERT_SHOW_TIME = 5_000;
 
 // получает целое не отрицательное число в указанном диапазоне. если передано одно значение - возвращает от 0 до этого значения включительно. если ничего не передано - возвращает undefined
 const getRandomIntegerNotNegativeNumber = (a, b) => {
@@ -74,9 +74,7 @@ const showAlert = (message) => {
 
   document.body.append(alertContainer);
 
-  setTimeout(() => {
-    alertContainer.remove();
-  }, ALERT_SHOW_TIME);
+  setTimeout(alertContainer.remove, ALERT_SHOW_TIME);
 };
 
 const debounce = (callback, timeoutDelay) => {
@@ -87,5 +85,6 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
+const isKeyEscape = (evt) => evt.key === 'Escape';
 
-export {makeElement, isTextFieldActive, showAlert, debounce, makeIdGenerator};
+export {makeElement, isTextFieldActive, showAlert, debounce, makeIdGenerator, isKeyEscape};
