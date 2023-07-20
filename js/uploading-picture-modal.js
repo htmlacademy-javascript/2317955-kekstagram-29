@@ -2,6 +2,7 @@ import {resetValidator} from './form-validation.js';
 import {isTextFieldActive} from './util.js';
 import {setFormSubmit} from './uploading-picture-form.js';
 import {resetEffects} from './effects.js';
+import {errorModal} from './errors.js';
 
 const ACCEPTABLE_FILE_TYPES = ['jpg', 'jprg', 'png'];
 
@@ -14,6 +15,7 @@ const formCloseBtn = form.querySelector('.img-upload__cancel');
 const preview = form.querySelector('.img-upload__preview img');
 const effectsPreviews = form.querySelectorAll('.effects__preview');
 const scaleInput = form.querySelector('.scale__control--value');
+const submitBtn = form.querySelector('.img-upload__submit');
 
 
 const openModal = () => {
@@ -24,6 +26,7 @@ const openModal = () => {
 };
 
 const resetForm = () => {
+  submitBtn.disabled = false;
   scaleInput.value = '100%';
   preview.style.transform = 'scale(1)';
   imgInput.value = '';
@@ -46,7 +49,7 @@ function onCloseBtnClick () {
 }
 
 function onEscapePress (evt) {
-  if (!isTextFieldActive()) {
+  if (!isTextFieldActive() && errorModal.classList.contains('hidden')) {
     if(evt.key === 'Escape') {
       evt.preventDefault();
       closeModal();

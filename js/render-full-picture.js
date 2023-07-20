@@ -21,7 +21,7 @@ const renderFullPicture = ({url, likes, comments, description}) => {
     fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
   }
 
-  commentCount.textContent = `${Math.min(comments.length, SHOWN_COMMENTS_AMOUNT)} из `;
+  commentCount.textContent = Math.min(comments.length, SHOWN_COMMENTS_AMOUNT);
 };
 
 

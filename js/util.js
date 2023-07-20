@@ -1,4 +1,4 @@
-const ALERT_SHOW_TIME = 5_000;
+const ALERT_SHOW_TIME = 5000;
 
 // получает целое не отрицательное число в указанном диапазоне. если передано одно значение - возвращает от 0 до этого значения включительно. если ничего не передано - возвращает undefined
 const getRandomIntegerNotNegativeNumber = (a, b) => {
@@ -74,7 +74,15 @@ const showAlert = (message) => {
 
   document.body.append(alertContainer);
 
-  setTimeout(alertContainer.remove, ALERT_SHOW_TIME);
+  // ВОПРОС почему вот так код работает:
+  setTimeout(() => alertContainer.remove(), ALERT_SHOW_TIME);
+  // а вот так нет:
+  // setTimeout(alertContainer.remove, ALERT_SHOW_TIME);
+  // в этом случае сообщение об ошибки не исчезает, а по прошествии 5 секунд в консоли сообщение:
+  // Uncaught TypeError: Illegal invocation
+  // setTimeout (async)
+  // showAlert	@	util.js:82
+  // (anonymous)	@	main.js:16
 };
 
 const debounce = (callback, timeoutDelay) => {

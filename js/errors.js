@@ -41,4 +41,4 @@ function onEscapePress (evt) {
   }
 }
 
-export {showMessage, onEscapePress};
+export {showMessage, onEscapePress, errorModal};

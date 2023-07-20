@@ -41,6 +41,7 @@ const filterPictures = (evt, cb, picturesData) => {
 
 
 const setOnFiltersClick = (cb, picturesData) => {
+  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
   const makeDebouncer = debounce((data) => {
     const previousPictures = document.querySelectorAll('.picture');
     previousPictures.forEach((previousPicture) => previousPicture.remove());

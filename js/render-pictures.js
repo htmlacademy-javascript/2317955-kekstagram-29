@@ -1,6 +1,3 @@
-import {openFullPicture} from './full-picture-modal.js';
-
-
 const picturesContainer = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -27,8 +24,6 @@ const renderPictures = (data) => {
 
   picturesContainer.append(picturesTemporaryFragment);
 };
-
-picturesContainer.addEventListener('click', openFullPicture);
 
 
 export {renderPictures, picturesContainer};
