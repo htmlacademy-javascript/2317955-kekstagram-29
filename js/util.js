@@ -1,5 +1,36 @@
 const ALERT_SHOW_TIME = 5000;
 
+// получает целое не отрицательное число в указанном диапазоне. если передано одно значение - возвращает от 0 до этого значения включительно. если ничего не передано - возвращает undefined
+const getRandomIntegerNotNegativeNumber = (a, b) => {
+  a = a > 0 ? Math.round(parseInt(a, 10)) : 0;
+  b = b > 0 ? Math.round(parseInt(b, 10)) : 0;
+  if (a === b) {
+    return a;
+  }
+  const min = Math.min(a, b);
+  const max = Math.max(a, b);
+  const rangeSize = max - min;
+  return Math.round(min + Math.random() * rangeSize);
+};
+
+
+// создает генератор айди в заданном диапазоне
+const makeIdGenerator = (min, max) => {
+  const previousIds = [];
+  return function() {
+    if (previousIds.length === (max - min + 1)) {
+      return null;
+    }
+    let newId = getRandomIntegerNotNegativeNumber(min, max);
+    while (previousIds.includes(newId)) {
+      newId = getRandomIntegerNotNegativeNumber(min, max);
+    }
+    previousIds.push(newId);
+    return newId;
+  };
+};
+
+
 const makeElement = (tagName, className, text) => {
 
   // TODO refactor makeElement using other variant
@@ -48,4 +79,33 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {makeElement, isTextFieldActive, showAlert};
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+function throttle (callback, delayBetweenFrames) {
+  // Используем замыкания, чтобы время "последнего кадра" навсегда приклеилось
+  // к возвращаемой функции с условием, тогда мы его сможем перезаписывать
+  let lastTime = 0;
+
+  return (...rest) => {
+    // Получаем текущую дату в миллисекундах,
+    // чтобы можно было в дальнейшем
+    // вычислять разницу между кадрами
+    const now = new Date();
+
+    // Если время между кадрами больше задержки,
+    // вызываем наш колбэк и перезаписываем lastTime
+    // временем "последнего кадра"
+    if (now - lastTime >= delayBetweenFrames) {
+      callback.apply(this, rest);
+      lastTime = now;
+    }
+  };
+}
+
+export {makeElement, isTextFieldActive, showAlert, debounce, throttle, makeIdGenerator};
