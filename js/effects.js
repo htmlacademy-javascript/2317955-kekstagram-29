@@ -95,7 +95,7 @@ const EffectsOptions = {
 noUiSlider.create(slider, EffectsOptions.DEFAULT.sliderOptions);
 
 
-const onEffectBtnChange = (evt) => {
+const onEffectSelect = (evt) => {
   if (evt.target.name !== 'effect') {
     return;
   }
@@ -112,7 +112,7 @@ const onEffectBtnChange = (evt) => {
 };
 
 // TODO вынести назначение слушателя радио кнопок куда-то в другое место
-buttonsContainer.addEventListener('change', onEffectBtnChange);
+buttonsContainer.addEventListener('change', onEffectSelect);
 
 
 slider.noUiSlider.on('update', () => {
@@ -132,4 +132,4 @@ const resetEffects = () => {
 
 resetEffects();
 
-export {onEffectBtnChange, resetEffects};
+export {onEffectSelect as onEffectBtnChange, resetEffects};

@@ -1,6 +1,6 @@
 import {isValid} from './form-validation.js';
 import {sendData} from './network.js';
-import {showMessage, onEscapePress} from './errors.js';
+import {showMessage} from './errors.js';
 
 const submitBtn = document.querySelector('.img-upload__submit');
 
@@ -33,7 +33,6 @@ const setFormSubmit = async (evt, onSuccess) => {
     } catch (err) {
       showMessage('error');
     }
-    document.addEventListener('keydown', onEscapePress);
     unblockSubmitButton();
   }
 };

@@ -1,6 +1,6 @@
 import {picturesContainer} from './render-pictures.js';
 import {renderFullPicture} from './render-full-picture.js';
-import {SHOWN_COMMENTS_AMOUNT} from './constants.js';
+import {SHOWN_COMMENTS_NUMBER} from './constants.js';
 import {onCommentsLoadBtnClick} from './render-comments.js';
 import {isKeyEscape} from './util.js';
 
@@ -9,7 +9,7 @@ const fullPictureCloseBtn = fullPicture.querySelector('.big-picture__cancel');
 const commentsContainer = fullPicture.querySelector('.social__comments');
 const allComments = commentsContainer.children;
 const commentsLoadBtn = fullPicture.querySelector('.social__comments-loader');
-const commentCount = fullPicture.querySelector('.comments-count__shown').firstChild;
+const commentCount = fullPicture.querySelector('.comments-count__shown');
 
 
 const getFullPictureData = (evt, picturesData) => {
@@ -37,7 +37,7 @@ const openFullPicture = (evt, picturesData) => {
   document.body.classList.add('modal-open');
 
   fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
-  if (allComments.length > SHOWN_COMMENTS_AMOUNT) {
+  if (allComments.length > SHOWN_COMMENTS_NUMBER) {
     commentsLoadBtn.addEventListener('click', onCommentsLoadBtnClick);
   }
   document.addEventListener('keydown', onFullPictureEscapePress);
@@ -63,7 +63,7 @@ function onFullPictureCloseButton () {
   closeFullPicture();
 }
 
-const setOnPictureClick = (picturesData) => {
+const handlePictureClick = (picturesData) => {
   const onPicturesContainer = (evt) => openFullPicture(evt, picturesData);
   picturesContainer.addEventListener('click', onPicturesContainer);
 };
@@ -75,5 +75,5 @@ export {
   commentCount,
   commentsLoadBtn,
   openFullPicture,
-  setOnPictureClick
+  handlePictureClick
 };

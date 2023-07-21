@@ -95,4 +95,10 @@ const debounce = (callback, timeoutDelay) => {
 
 const isKeyEscape = (evt) => evt.key === 'Escape';
 
-export {makeElement, isTextFieldActive, showAlert, debounce, makeIdGenerator, isKeyEscape};
+const createMessageModal = (template) => {
+  const modal = document.body.appendChild(template.cloneNode(true));
+  modal.classList.add('hidden');
+  return modal;
+};
+
+export {makeElement, isTextFieldActive, showAlert, debounce, makeIdGenerator, isKeyEscape, createMessageModal};

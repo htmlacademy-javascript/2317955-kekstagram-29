@@ -1,27 +1,19 @@
-import {makeIdGenerator, debounce} from './util.js';
-import {FOTOS_AMOUNT} from './constants.js';
+import {debounce} from './util.js';
 
-const RANDOM_FOTOS_AMOUNT = 10;
+const RANDOM_FOTOS_NUMBER = 10;
 const RERENDER_DELAY = 500;
 const form = document.querySelector('.img-filters__form');
 let currentActiveButton = form.querySelector('#filter-default');
 
-const getFiltersData = (evt, picturesData) => {
-  switch (evt.target.id) {
+const getFiltersData = (effect, picturesData) => {
+  switch (effect) {
 
-    case 'filter-random':
-      return function() {
-        const generateId = makeIdGenerator(0, FOTOS_AMOUNT - 1);
-        const randomIds = Array.from({length: RANDOM_FOTOS_AMOUNT}, generateId);
-        return Array.from(randomIds, (id) => picturesData[id]);
-      }();
+    case 'filter-random': {
+      return picturesData.slice().sort(() => Math.random() - 0.5).slice(0, RANDOM_FOTOS_NUMBER);
+    }
 
     case 'filter-discussed':
-      return picturesData.slice().sort((a, b) => {
-        const popularityA = a.comments.length;
-        const popularityB = b.comments.length;
-        return popularityB - popularityA;
-      });
+      return picturesData.slice().sort((a, b) => b.comments.length - a.comments.length);
 
     default:
       return picturesData;
@@ -34,13 +26,13 @@ const filterPictures = (evt, cb, picturesData) => {
     currentActiveButton = evt.target;
     currentActiveButton.classList.add('img-filters__button--active');
 
-    const filtersData = getFiltersData(evt, picturesData);
+    const filtersData = getFiltersData(evt.target.id, picturesData);
     cb(filtersData);
   }
 };
 
 
-const setOnFiltersClick = (cb, picturesData) => {
+const handleFiltersClick = (cb, picturesData) => {
   document.querySelector('.img-filters').classList.remove('img-filters--inactive');
   const makeDebouncer = debounce((data) => {
     const previousPictures = document.querySelectorAll('.picture');
@@ -52,4 +44,4 @@ const setOnFiltersClick = (cb, picturesData) => {
 };
 
 
-export {setOnFiltersClick};
+export {handleFiltersClick};

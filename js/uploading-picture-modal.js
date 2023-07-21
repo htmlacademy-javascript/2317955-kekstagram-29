@@ -1,10 +1,11 @@
 import {resetValidator} from './form-validation.js';
-import {isTextFieldActive} from './util.js';
+import {isKeyEscape, isTextFieldActive} from './util.js';
 import {setFormSubmit} from './uploading-picture-form.js';
 import {resetEffects} from './effects.js';
 import {errorModal} from './errors.js';
+import {handleScailingClick} from './scale-preview.js';
 
-const ACCEPTABLE_FILE_TYPES = ['jpg', 'jprg', 'png'];
+const ACCEPTABLE_FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const form = document.querySelector('.img-upload__form');
 const uploadModal = form.querySelector('.img-upload__overlay');
@@ -50,7 +51,7 @@ function onCloseBtnClick () {
 
 function onEscapePress (evt) {
   if (!isTextFieldActive() && errorModal.classList.contains('hidden')) {
-    if(evt.key === 'Escape') {
+    if(isKeyEscape(evt)) {
       evt.preventDefault();
       closeModal();
     }
@@ -58,6 +59,7 @@ function onEscapePress (evt) {
 }
 
 const onInputImgChange = () => {
+  URL.revokeObjectURL(preview.src);
   const file = imgInput.files[0];
   const fileName = file.name.toLowerCase();
   const isNameAcceptable = ACCEPTABLE_FILE_TYPES.some((type) => fileName.endsWith(type));
@@ -71,11 +73,14 @@ const onInputImgChange = () => {
   openModal();
 };
 
-imgInput.addEventListener('change', onInputImgChange);
 
 const onFormSubmit = (evt) => setFormSubmit(evt, closeModal);
-form.addEventListener('submit', onFormSubmit);
 
+const initModalForm = () => {
+  imgInput.addEventListener('change', onInputImgChange);
+  form.addEventListener('submit', onFormSubmit);
+  handleScailingClick();
+};
 
 export {
   form,
@@ -85,4 +90,5 @@ export {
   preview,
   scaleInput,
   closeModal,
+  initModalForm
 };

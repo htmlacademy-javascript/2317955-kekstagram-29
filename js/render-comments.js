@@ -1,5 +1,5 @@
 import {makeElement} from './util.js';
-import {SHOWN_COMMENTS_AMOUNT} from './constants.js';
+import {SHOWN_COMMENTS_NUMBER} from './constants.js';
 import {allComments, fullPicture, commentsLoadBtn, commentCount} from './full-picture-modal.js';
 
 
@@ -28,7 +28,7 @@ const renderAllComments = (commentsData) => {
 };
 
 const hideSomeComments = () => {
-  for (let i = SHOWN_COMMENTS_AMOUNT; i < allComments.length; i++) {
+  for (let i = SHOWN_COMMENTS_NUMBER; i < allComments.length; i++) {
     allComments.item(i).classList.add('hidden');
   }
 };
@@ -36,7 +36,7 @@ const hideSomeComments = () => {
 function onCommentsLoadBtnClick () {
   const firstHiddenComment = fullPicture.querySelector('.social__comment.hidden');
   const firstHiddenCommentIndex = [...allComments].indexOf(firstHiddenComment);
-  const breakpoint = Math.min(firstHiddenCommentIndex + SHOWN_COMMENTS_AMOUNT, allComments.length) ;
+  const breakpoint = Math.min(firstHiddenCommentIndex + SHOWN_COMMENTS_NUMBER, allComments.length) ;
   for (let i = firstHiddenCommentIndex; i < breakpoint ; i++) {
     allComments.item(i).classList.remove('hidden');
   }

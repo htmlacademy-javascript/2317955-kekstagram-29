@@ -1,55 +1,70 @@
 // import {form, submitBtn, hashtagInput, commentInput} from './uploading-picture-modal.js';
-import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
+import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_NUMBER, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
 const form = document.querySelector('.img-upload__form');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
 const submitBtn = form.querySelector('.img-upload__submit');
 
-const getHashtagAmountMessage = (number) => {
-  switch (new Intl.PluralRules('ru-RU').select(number)) {
+/* TODO можно использовать класс:
+class MessageFormater {
+  static rules = new Intl.PluralRules('ru-RU');
+
+  static message(n) {
+    return MessageFormater.rules.select(n)
+}
+MessageFormater.message(5)
+*/
+
+const pluralRules = new Intl.PluralRules('ru-RU');
+
+const getHashtagNumberMessage = (number) => {
+  switch (pluralRules.select(number)) {
     case 'one': {
-      return `${number} хештег`;
+      return `Максимум ${number} хештег`;
     }
     case 'few': {
-      return `${number} хештега`;
+      return `Максимум ${number} хештега`;
     }
     case 'many': {
-      return `${number} хештегов`;
+      return `Максимум ${number} хештегов`;
     }
-    case 'dafault': {
-      return `${number} хештега`;
+    // case 'other'
+    default: {
+      return `Максимум ${number} хештега`;
     }
   }
 };
-const getLettersAmountMessage = (number) => {
-  switch (new Intl.PluralRules('ru-RU').select(number)) {
+const getLettersNumberMessage = (number) => {
+  switch (pluralRules.select(number)) {
     case 'one': {
-      return `${number} буквы`;
+      return `Хештег должен начинаться с # и содержать не более ${number} буквы кирилицы и/или латинского алфавита`;
     }
     case 'few': {
-      return `${number} букв`;
+      return `Хештег должен начинаться с # и содержать не более ${number} букв кирилицы и/или латинского алфавита`;
     }
     case 'many': {
-      return `${number} букв`;
+      return `Хештег должен начинаться с # и содержать не более ${number} букв кирилицы и/или латинского алфавита`;
     }
-    case 'dafault': {
-      return `${number} букв`;
+    // case 'other'
+    default: {
+      return `Хештег должен начинаться с # и содержать не более ${number} букв кирилицы и/или латинского алфавита`;
     }
   }
 };
-const getSymbolsAmountMessage = (number) => {
-  switch (new Intl.PluralRules('ru-RU').select(number)) {
+const getSymbolsNumberMessage = (number) => {
+  switch (pluralRules.select(number)) {
     case 'one': {
-      return `${number} символ`;
+      return `Максимальная длина сообщения ${number} символ`;
     }
     case 'few': {
-      return `${number} символа`;
+      return `Максимальная длина сообщения ${number} символа`;
     }
     case 'many': {
-      return `${number} символов`;
+      return `Максимальная длина сообщения ${number} символов`;
     }
-    case 'dafault': {
-      return `${number} символа`;
+    // case 'other'
+    default: {
+      return `Максимальная длина сообщения ${number} символа`;
     }
   }
 };
@@ -66,14 +81,14 @@ const pristine = new Pristine(form, {
 
 const getHashtagsArray = (value) => value.toLowerCase().replace(/\s+/g, ' ').trim().split(' ');
 
-const isHashtagAmountValid = (value) => {
+const isHashtagNumberValid = (value) => {
   const hashtags = getHashtagsArray(value);
-  return hashtags.length <= MAX_HASHTAG_AMOUNT;
+  return hashtags.length <= MAX_HASHTAG_NUMBER;
 };
 pristine.addValidator(
   hashtagInput,
-  isHashtagAmountValid,
-  `Максимум ${getHashtagAmountMessage(MAX_HASHTAG_AMOUNT)}`,
+  isHashtagNumberValid,
+  getHashtagNumberMessage(MAX_HASHTAG_NUMBER),
   3,
   true,
 );
@@ -88,7 +103,7 @@ const isEveryHashtagValid = (value) => {
 pristine.addValidator(
   hashtagInput,
   isEveryHashtagValid,
-  `Хештег должен начинаться с # и содержать не более ${getLettersAmountMessage(MAX_HASHTAG_LENGTH)} кирилицы и/или латинского алфавита`,
+  getLettersNumberMessage(MAX_HASHTAG_LENGTH),
   2,
   true,
 );
@@ -109,7 +124,7 @@ const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
 pristine.addValidator(
   commentInput,
   isDescriptionValid,
-  `Максимальная длина сообщения ${getSymbolsAmountMessage(MAX_DESCRIPTION_LENGTH)}`
+  getSymbolsNumberMessage(MAX_DESCRIPTION_LENGTH)
 );
 
 const isValid = pristine.validate;

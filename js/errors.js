@@ -1,38 +1,26 @@
-import {isKeyEscape} from './util.js';
+import {isKeyEscape, createMessageModal} from './util.js';
+
+const classesForClosing = ['success__button', 'success', 'error__button', 'error'];
 
 const successModalTemplate = document.querySelector('#success').content.querySelector('.success');
 const errorModalTemplate = document.querySelector('#error').content.querySelector('.error');
-
-const successModal = document.body.appendChild(successModalTemplate.cloneNode(true));
-const errorModal = document.body.appendChild(errorModalTemplate.cloneNode(true));
-
-successModal.classList.add('hidden');
-errorModal.classList.add('hidden');
+const successModal = createMessageModal(successModalTemplate);
+const errorModal = createMessageModal(errorModalTemplate);
 
 
 const showMessage = (message) => {
-  if (message === 'success') {
-    return void successModal.classList.remove('hidden');
-  }
-  errorModal.classList.remove('hidden');
+  const modal = (message === 'success') ? successModal : errorModal;
+  modal.classList.remove('hidden');
+  modal.addEventListener('click', onMessageModalClick);
+  document.addEventListener('keydown', onEscapePress);
 };
 
 const hideMessage = () => {
-  successModal.classList.add('hidden');
-  errorModal.classList.add('hidden');
+  const modal = (!successModal.classList.contains('hidden')) ? successModal : errorModal;
+  modal.classList.add('hidden');
+  modal.removeEventListener('click', onMessageModalClick);
   document.removeEventListener('keydown', onEscapePress);
 };
-
-successModal.addEventListener('click', (evt) => {
-  if (!evt.target.classList.contains('success__inner' || evt.target.classList.contains('success__button'))) {
-    hideMessage();
-  }
-});
-errorModal.addEventListener('click', (evt) => {
-  if (!evt.target.classList.contains('error__inner' || evt.target.classList.contains('error__button'))) {
-    hideMessage();
-  }
-});
 
 function onEscapePress (evt) {
   if(isKeyEscape(evt)) {
@@ -41,4 +29,13 @@ function onEscapePress (evt) {
   }
 }
 
-export {showMessage, onEscapePress, errorModal};
+function onMessageModalClick (evt) {
+  const [...targetClasses] = evt.target.classList;
+  const intersection = classesForClosing.filter((classForClosing) => targetClasses.includes(classForClosing));
+  if (intersection.length) {
+    hideMessage();
+  }
+}
+
+
+export {showMessage, errorModal};

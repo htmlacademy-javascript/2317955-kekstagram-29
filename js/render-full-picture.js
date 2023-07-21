@@ -1,5 +1,5 @@
 import {renderAllComments, hideSomeComments} from './render-comments.js';
-import {SHOWN_COMMENTS_AMOUNT} from './constants.js';
+import {SHOWN_COMMENTS_NUMBER} from './constants.js';
 import {fullPicture, commentsContainer, commentCount, allComments} from './full-picture-modal.js';
 
 
@@ -14,14 +14,14 @@ const renderFullPicture = ({url, likes, comments, description}) => {
   commentsContainer.innerHTML = '';
   const commentsTemporaryFragment = renderAllComments(comments);
   commentsContainer.append(commentsTemporaryFragment);
-  if (allComments.length > SHOWN_COMMENTS_AMOUNT) {
+  if (allComments.length > SHOWN_COMMENTS_NUMBER) {
     hideSomeComments();
     fullPicture.querySelector('.social__comments-loader').classList.remove('hidden');
   } else {
     fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
   }
 
-  commentCount.textContent = Math.min(comments.length, SHOWN_COMMENTS_AMOUNT);
+  commentCount.textContent = Math.min(comments.length, SHOWN_COMMENTS_NUMBER);
 };
 
 
