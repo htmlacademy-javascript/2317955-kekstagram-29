@@ -1,4 +1,4 @@
-const BASE_URL = 'https://29.javascript.pages.academy/kekstagram';
+import {BASE_URL} from './constants.js';
 
 const ApiOptions = {
   FETCH: {

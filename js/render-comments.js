@@ -4,15 +4,10 @@ import {allComments, fullPicture, commentsLoadBtn, commentCount} from './full-pi
 
 
 const renderComment = ({avatar, name, message}) => {
-  const newComment = makeElement('li', 'social__comment');
-
-  const commentAvatar = makeElement('img', 'social__picture', name);
-  commentAvatar.src = avatar;
-  commentAvatar.width = 35;
-  commentAvatar.height = 35;
+  const newComment = makeElement('li', {className: 'social__comment'});
+  const commentAvatar = makeElement('img', {className: 'social__picture', alt: name, src: avatar, width: 35, height: 35});
   newComment.append(commentAvatar);
-
-  const commentText = makeElement('p', 'social__text', message);
+  const commentText = makeElement('p', {className: 'social__text', textContent: message});
   newComment.append(commentText);
 
   return newComment;

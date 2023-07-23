@@ -1,13 +1,3 @@
-const form = document.querySelector('.img-upload__form');
-const preview = form.querySelector('.img-upload__preview img');
-const buttonsContainer = form.querySelector('.img-upload__effects');
-const sliderContainer = form.querySelector('.img-upload__effect-level');
-const slider = sliderContainer.querySelector('.effect-level__slider');
-const sliderInput = sliderContainer.querySelector('.effect-level__value');
-
-let chosenEffect;
-
-
 const EffectsOptions = {
   DEFAULT: {
     sliderOptions: {
@@ -92,8 +82,22 @@ const EffectsOptions = {
   },
 };
 
-noUiSlider.create(slider, EffectsOptions.DEFAULT.sliderOptions);
+const form = document.querySelector('.img-upload__form');
+const preview = form.querySelector('.img-upload__preview img');
+const buttonsContainer = form.querySelector('.img-upload__effects');
+const sliderContainer = form.querySelector('.img-upload__effect-level');
+const slider = sliderContainer.querySelector('.effect-level__slider');
+const sliderInput = sliderContainer.querySelector('.effect-level__value');
 
+let chosenEffect;
+
+
+const resetEffects = () => {
+  sliderContainer.classList.add('hidden');
+  preview.style.filter = 'none';
+  form.querySelector('.effects__radio[value = "none"]').checked = true;
+  sliderInput.value = 0;
+};
 
 const onEffectSelect = (evt) => {
   if (evt.target.name !== 'effect') {
@@ -111,25 +115,20 @@ const onEffectSelect = (evt) => {
   slider.noUiSlider.updateOptions(effect.sliderOptions);
 };
 
-// TODO вынести назначение слушателя радио кнопок куда-то в другое место
-buttonsContainer.addEventListener('change', onEffectSelect);
+const initEffects = () => {
+  resetEffects();
 
+  buttonsContainer.addEventListener('change', onEffectSelect);
 
-slider.noUiSlider.on('update', () => {
-  sliderInput.value = slider.noUiSlider.get();
-  const effect = EffectsOptions[chosenEffect];
-  if (effect) {
-    preview.style.filter = effect.filterOptions(sliderInput.value);
-  }
-});
+  noUiSlider.create(slider, EffectsOptions.DEFAULT.sliderOptions);
 
-const resetEffects = () => {
-  sliderContainer.classList.add('hidden');
-  preview.style.filter = 'none';
-  form.querySelector('.effects__radio[value = "none"]').checked = true;
-  sliderInput.value = 0;
+  slider.noUiSlider.on('update', () => {
+    sliderInput.value = slider.noUiSlider.get();
+    const effect = EffectsOptions[chosenEffect];
+    if (effect) {
+      preview.style.filter = effect.filterOptions(sliderInput.value);
+    }
+  });
 };
 
-resetEffects();
-
-export {onEffectSelect as onEffectBtnChange, resetEffects};
+export {initEffects, resetEffects};

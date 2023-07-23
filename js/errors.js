@@ -8,8 +8,8 @@ const successModal = createMessageModal(successModalTemplate);
 const errorModal = createMessageModal(errorModalTemplate);
 
 
-const showMessage = (message) => {
-  const modal = (message === 'success') ? successModal : errorModal;
+const showMessage = (isSuccess) => {
+  const modal = isSuccess ? successModal : errorModal;
   modal.classList.remove('hidden');
   modal.addEventListener('click', onMessageModalClick);
   document.addEventListener('keydown', onEscapePress);

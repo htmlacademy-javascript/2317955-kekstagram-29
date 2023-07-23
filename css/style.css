@@ -1408,3 +1408,15 @@ main {
 .hidden {
   display: none;
 }
+
+.alert {
+  position: absolute;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  right: 0;
+  padding: 10px 3px;
+  font-size: 30px;
+  text-align: center;
+  background-color: red;
+}

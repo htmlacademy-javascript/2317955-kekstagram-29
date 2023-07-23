@@ -1,7 +1,6 @@
 import {debounce} from './util.js';
+import {RANDOM_FOTOS_NUMBER, RERENDER_DELAY} from './constants.js';
 
-const RANDOM_FOTOS_NUMBER = 10;
-const RERENDER_DELAY = 500;
 const form = document.querySelector('.img-filters__form');
 let currentActiveButton = form.querySelector('#filter-default');
 

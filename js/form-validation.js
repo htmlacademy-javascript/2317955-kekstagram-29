@@ -1,5 +1,5 @@
-// import {form, submitBtn, hashtagInput, commentInput} from './uploading-picture-modal.js';
 import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_NUMBER, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
+
 const form = document.querySelector('.img-upload__form');
 const hashtagInput = form.querySelector('.text__hashtags');
 const commentInput = form.querySelector('.text__description');
@@ -79,19 +79,15 @@ const pristine = new Pristine(form, {
   // errorTextClass: '' // Класс для элемента с текстом ошибки
 });
 
+const isValid = pristine.validate;
+const resetValidator = pristine.reset;
+
 const getHashtagsArray = (value) => value.toLowerCase().replace(/\s+/g, ' ').trim().split(' ');
 
 const isHashtagNumberValid = (value) => {
   const hashtags = getHashtagsArray(value);
   return hashtags.length <= MAX_HASHTAG_NUMBER;
 };
-pristine.addValidator(
-  hashtagInput,
-  isHashtagNumberValid,
-  getHashtagNumberMessage(MAX_HASHTAG_NUMBER),
-  3,
-  true,
-);
 
 const isEveryHashtagValid = (value) => {
   if (value === '') {
@@ -100,44 +96,54 @@ const isEveryHashtagValid = (value) => {
   const hashtags = getHashtagsArray(value);
   return hashtags.every((hashtag) => HASHTAG_RULE_REGEX.test(hashtag));
 };
-pristine.addValidator(
-  hashtagInput,
-  isEveryHashtagValid,
-  getLettersNumberMessage(MAX_HASHTAG_LENGTH),
-  2,
-  true,
-);
 
 const isEveryHasgtagUnique = (value) => {
   const hashtags = getHashtagsArray(value);
   return hashtags.length === new Set(hashtags).size;
 };
-pristine.addValidator(
-  hashtagInput,
-  isEveryHasgtagUnique,
-  'Хештеги не должны повторяться',
-  1,
-  true,
-);
 
 const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
-pristine.addValidator(
-  commentInput,
-  isDescriptionValid,
-  getSymbolsNumberMessage(MAX_DESCRIPTION_LENGTH)
-);
 
-const isValid = pristine.validate;
-const resetValidator = pristine.reset;
 
 const onTextInputChange = () => {
   submitBtn.disabled = !isValid();
 };
 
-hashtagInput.addEventListener('input', onTextInputChange);
+const initValidaton = () => {
+  pristine.addValidator(
+    hashtagInput,
+    isHashtagNumberValid,
+    getHashtagNumberMessage(MAX_HASHTAG_NUMBER),
+    3,
+    true,
+  );
 
-commentInput.addEventListener('input', onTextInputChange);
+  pristine.addValidator(
+    hashtagInput,
+    isEveryHashtagValid,
+    getLettersNumberMessage(MAX_HASHTAG_LENGTH),
+    2,
+    true,
+  );
+
+  pristine.addValidator(
+    hashtagInput,
+    isEveryHasgtagUnique,
+    'Хештеги не должны повторяться',
+    1,
+    true,
+  );
+
+  pristine.addValidator(
+    commentInput,
+    isDescriptionValid,
+    getSymbolsNumberMessage(MAX_DESCRIPTION_LENGTH)
+  );
+
+  hashtagInput.addEventListener('input', onTextInputChange);
+  commentInput.addEventListener('input', onTextInputChange);
+};
 
 
-export {resetValidator, isValid};
+export {resetValidator, isValid, initValidaton};
 

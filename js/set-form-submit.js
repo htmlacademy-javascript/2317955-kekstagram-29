@@ -2,13 +2,12 @@ import {isValid} from './form-validation.js';
 import {sendData} from './network.js';
 import {showMessage} from './errors.js';
 
-const submitBtn = document.querySelector('.img-upload__submit');
-
-
 const SubmitButtonText = {
   IDLE: 'Отправить',
   SENDING: 'Отправляю...'
 };
+
+const submitBtn = document.querySelector('.img-upload__submit');
 
 // TODO here we can use classes to group those simillar functions
 const blockSubmitButton = () => {
@@ -29,9 +28,9 @@ const setFormSubmit = async (evt, onSuccess) => {
     try {
       await sendData(new FormData(evt.target));
       onSuccess();
-      showMessage('success');
+      showMessage(true);
     } catch (err) {
-      showMessage('error');
+      showMessage(false);
     }
     unblockSubmitButton();
   }
