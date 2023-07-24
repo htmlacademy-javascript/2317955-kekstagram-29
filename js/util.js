@@ -1,7 +1,9 @@
-import { ALERT_SHOW_TIME } from './constants.js';
+const ALERT_SHOW_TIME = 5000;
+const KEYS_KEYCODE = {
+  Escape: 'Escape',
+};
 
-
-const makeElement = (tagName, options) => Object.assign(document.createElement(tagName), options);
+const isKeyEscape = (evt) => evt.key === KEYS_KEYCODE.Escape;
 
 const isTextFieldActive = () => {
   if (document.activeElement.type === 'text' || document.activeElement.type === 'textarea') {
@@ -10,11 +12,18 @@ const isTextFieldActive = () => {
   return false;
 };
 
+const makeElement = (tagName, options) => Object.assign(document.createElement(tagName), options);
 
 const showAlert = (message) => {
   const alertContainer = makeElement('div', {textContent: message, className: 'alert'});
   document.body.append(alertContainer);
   setTimeout(() => alertContainer.remove(), ALERT_SHOW_TIME);
+};
+
+const createMessageModal = (template) => {
+  const modal = document.body.appendChild(template.cloneNode(true));
+  modal.classList.add('hidden');
+  return modal;
 };
 
 const debounce = (callback, timeoutDelay) => {
@@ -23,14 +32,6 @@ const debounce = (callback, timeoutDelay) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-};
-
-const isKeyEscape = (evt) => evt.key === 'Escape';
-
-const createMessageModal = (template) => {
-  const modal = document.body.appendChild(template.cloneNode(true));
-  modal.classList.add('hidden');
-  return modal;
 };
 
 

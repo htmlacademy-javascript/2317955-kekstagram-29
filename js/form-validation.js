@@ -1,11 +1,11 @@
-import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_NUMBER, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
+import {MODALS, NODES} from './html-elements.js';
 
-const form = document.querySelector('.img-upload__form');
-const hashtagInput = form.querySelector('.text__hashtags');
-const commentInput = form.querySelector('.text__description');
-const submitBtn = form.querySelector('.img-upload__submit');
+const MAX_HASHTAG_LENGTH = 19;
+const MAX_HASHTAG_COUNT = 5;
+const MAX_DESCRIPTION_LENGTH = 140;
+const HASHTAG_RULE_REGEX = new RegExp(`^#[a-zа-яё0-9]{1,${MAX_HASHTAG_LENGTH}}$`, 'i');
 
-/* TODO можно использовать класс:
+/* TODO here we can use classes to group those simillar functions:
 class MessageFormater {
   static rules = new Intl.PluralRules('ru-RU');
 
@@ -17,7 +17,7 @@ MessageFormater.message(5)
 
 const pluralRules = new Intl.PluralRules('ru-RU');
 
-const getHashtagNumberMessage = (number) => {
+const getHashtagCountMessage = (number) => {
   switch (pluralRules.select(number)) {
     case 'one': {
       return `Максимум ${number} хештег`;
@@ -34,7 +34,7 @@ const getHashtagNumberMessage = (number) => {
     }
   }
 };
-const getLettersNumberMessage = (number) => {
+const getLettersCountMessage = (number) => {
   switch (pluralRules.select(number)) {
     case 'one': {
       return `Хештег должен начинаться с # и содержать не более ${number} буквы кирилицы и/или латинского алфавита`;
@@ -51,7 +51,7 @@ const getLettersNumberMessage = (number) => {
     }
   }
 };
-const getSymbolsNumberMessage = (number) => {
+const getSymbolsCountMessage = (number) => {
   switch (pluralRules.select(number)) {
     case 'one': {
       return `Максимальная длина сообщения ${number} символ`;
@@ -70,13 +70,9 @@ const getSymbolsNumberMessage = (number) => {
 };
 
 
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  // errorClass: '', // Класс, обозначающий невалидное поле
-  // successClass: '', // Класс, обозначающий валидное поле
-  errorTextParent: 'img-upload__field-wrapper', // Элемент, куда будет выводиться текст с ошибкой
-  // errorTextTag: '', // Тег, который будет обрамлять текст ошибки
-  // errorTextClass: '' // Класс для элемента с текстом ошибки
+const pristine = new Pristine(MODALS.newPictureForm, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
 });
 
 const isValid = pristine.validate;
@@ -84,9 +80,9 @@ const resetValidator = pristine.reset;
 
 const getHashtagsArray = (value) => value.toLowerCase().replace(/\s+/g, ' ').trim().split(' ');
 
-const isHashtagNumberValid = (value) => {
+const isEveryHasgtagUnique = (value) => {
   const hashtags = getHashtagsArray(value);
-  return hashtags.length <= MAX_HASHTAG_NUMBER;
+  return hashtags.length === new Set(hashtags).size;
 };
 
 const isEveryHashtagValid = (value) => {
@@ -97,37 +93,21 @@ const isEveryHashtagValid = (value) => {
   return hashtags.every((hashtag) => HASHTAG_RULE_REGEX.test(hashtag));
 };
 
-const isEveryHasgtagUnique = (value) => {
+const isHashtagCountValid = (value) => {
   const hashtags = getHashtagsArray(value);
-  return hashtags.length === new Set(hashtags).size;
+  return hashtags.length <= MAX_HASHTAG_COUNT;
 };
 
 const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
 
 
 const onTextInputChange = () => {
-  submitBtn.disabled = !isValid();
+  NODES.submitBtn.disabled = !isValid();
 };
 
-const initValidaton = () => {
+const init = () => {
   pristine.addValidator(
-    hashtagInput,
-    isHashtagNumberValid,
-    getHashtagNumberMessage(MAX_HASHTAG_NUMBER),
-    3,
-    true,
-  );
-
-  pristine.addValidator(
-    hashtagInput,
-    isEveryHashtagValid,
-    getLettersNumberMessage(MAX_HASHTAG_LENGTH),
-    2,
-    true,
-  );
-
-  pristine.addValidator(
-    hashtagInput,
+    NODES.hashtagInput,
     isEveryHasgtagUnique,
     'Хештеги не должны повторяться',
     1,
@@ -135,15 +115,31 @@ const initValidaton = () => {
   );
 
   pristine.addValidator(
-    commentInput,
-    isDescriptionValid,
-    getSymbolsNumberMessage(MAX_DESCRIPTION_LENGTH)
+    NODES.hashtagInput,
+    isEveryHashtagValid,
+    getLettersCountMessage(MAX_HASHTAG_LENGTH),
+    2,
+    true,
   );
 
-  hashtagInput.addEventListener('input', onTextInputChange);
-  commentInput.addEventListener('input', onTextInputChange);
+  pristine.addValidator(
+    NODES.hashtagInput,
+    isHashtagCountValid,
+    getHashtagCountMessage(MAX_HASHTAG_COUNT),
+    3,
+    true,
+  );
+
+  pristine.addValidator(
+    NODES.commentInput,
+    isDescriptionValid,
+    getSymbolsCountMessage(MAX_DESCRIPTION_LENGTH)
+  );
+
+  NODES.hashtagInput.addEventListener('input', onTextInputChange);
+  NODES.commentInput.addEventListener('input', onTextInputChange);
 };
 
 
-export {resetValidator, isValid, initValidaton};
+export {resetValidator, isValid, init};
 

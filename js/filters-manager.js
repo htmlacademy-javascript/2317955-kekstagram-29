@@ -1,14 +1,16 @@
 import {debounce} from './util.js';
-import {RANDOM_FOTOS_NUMBER, RERENDER_DELAY} from './constants.js';
+import {MODALS} from './html-elements.js';
 
-const form = document.querySelector('.img-filters__form');
-let currentActiveButton = form.querySelector('#filter-default');
+const RERENDER_DELAY = 500;
+const RANDOM_PICTURES_COUNT = 10;
+
+let currentActiveButton = MODALS.newPictureForm.querySelector('#filter-default');
 
 const getFiltersData = (effect, picturesData) => {
   switch (effect) {
 
     case 'filter-random': {
-      return picturesData.slice().sort(() => Math.random() - 0.5).slice(0, RANDOM_FOTOS_NUMBER);
+      return picturesData.slice().sort(() => Math.random() - 0.5).slice(0, RANDOM_PICTURES_COUNT);
     }
 
     case 'filter-discussed':
@@ -33,13 +35,13 @@ const filterPictures = (evt, cb, picturesData) => {
 
 const handleFiltersClick = (cb, picturesData) => {
   document.querySelector('.img-filters').classList.remove('img-filters--inactive');
-  const makeDebouncer = debounce((data) => {
+  const debounceFunction = debounce((data) => {
     const previousPictures = document.querySelectorAll('.picture');
     previousPictures.forEach((previousPicture) => previousPicture.remove());
     cb(data);
   }, RERENDER_DELAY);
-  const onFilterBtnClick = (evt) => filterPictures(evt, makeDebouncer, picturesData);
-  form.addEventListener('click', onFilterBtnClick);
+  const onFilterBtnClick = (evt) => filterPictures(evt, debounceFunction, picturesData);
+  MODALS.newPictureForm.addEventListener('click', onFilterBtnClick);
 };
 
 

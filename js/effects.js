@@ -1,27 +1,14 @@
+import {MODALS, NODES} from './html-elements.js';
+
 const EffectsOptions = {
-  DEFAULT: {
-    sliderOptions: {
-      range: {
-        min: 0,
-        max: 100,
-      },
-      start: 0,
-      step: 1,
-      connect: 'lower',
-      format: {
-        to: (value) => value.toFixed((Number.isInteger(value)) ? 0 : 1),
-        from: Number.parseFloat,
-      },
-    },
-  },
   NONE: {
     sliderOptions: {
       range: {
         min: 0,
-        max: 100,
+        max: 0,
       },
       start: 0,
-      step: 1,
+      step: 0,
     },
     filterOptions: () => 'none',
   },
@@ -82,21 +69,13 @@ const EffectsOptions = {
   },
 };
 
-const form = document.querySelector('.img-upload__form');
-const preview = form.querySelector('.img-upload__preview img');
-const buttonsContainer = form.querySelector('.img-upload__effects');
-const sliderContainer = form.querySelector('.img-upload__effect-level');
-const slider = sliderContainer.querySelector('.effect-level__slider');
-const sliderInput = sliderContainer.querySelector('.effect-level__value');
-
 let chosenEffect;
 
-
 const resetEffects = () => {
-  sliderContainer.classList.add('hidden');
-  preview.style.filter = 'none';
-  form.querySelector('.effects__radio[value = "none"]').checked = true;
-  sliderInput.value = 0;
+  NODES.sliderContainer.classList.add('hidden');
+  NODES.preview.style.filter = 'none';
+  MODALS.newPictureForm.querySelector('.effects__radio[value = "none"]').checked = true;
+  NODES.sliderInput.value = 0;
 };
 
 const onEffectSelect = (evt) => {
@@ -108,27 +87,34 @@ const onEffectSelect = (evt) => {
   const effect = EffectsOptions[chosenEffect];
 
   if (chosenEffect === 'NONE') {
-    sliderContainer.classList.add('hidden');
+    NODES.sliderContainer.classList.add('hidden');
   } else {
-    sliderContainer.classList.remove('hidden');
+    NODES.sliderContainer.classList.remove('hidden');
   }
-  slider.noUiSlider.updateOptions(effect.sliderOptions);
+  NODES.slider.noUiSlider.updateOptions(effect.sliderOptions);
 };
 
-const initEffects = () => {
+const init = () => {
   resetEffects();
 
-  buttonsContainer.addEventListener('change', onEffectSelect);
+  NODES.buttonsContainer.addEventListener('change', onEffectSelect);
 
-  noUiSlider.create(slider, EffectsOptions.DEFAULT.sliderOptions);
+  noUiSlider.create(NODES.slider, {
+    ...EffectsOptions.NONE.sliderOptions,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed((Number.isInteger(value)) ? 0 : 1),
+      from: Number.parseFloat,
+    },
+  });
 
-  slider.noUiSlider.on('update', () => {
-    sliderInput.value = slider.noUiSlider.get();
+  NODES.slider.noUiSlider.on('update', () => {
+    NODES.sliderInput.value = NODES.slider.noUiSlider.get();
     const effect = EffectsOptions[chosenEffect];
     if (effect) {
-      preview.style.filter = effect.filterOptions(sliderInput.value);
+      NODES.preview.style.filter = effect.filterOptions(NODES.sliderInput.value);
     }
   });
 };
 
-export {initEffects, resetEffects};
+export {init, resetEffects};

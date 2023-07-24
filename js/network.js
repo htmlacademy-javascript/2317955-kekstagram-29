@@ -1,4 +1,4 @@
-import {BASE_URL} from './constants.js';
+const BASE_URL = 'https://29.javascript.pages.academy/kekstagram';
 
 const ApiOptions = {
   FETCH: {
@@ -26,17 +26,18 @@ const load = async ({route, method, errorText}, body) => {
   }
 };
 
-// TODO here we can use classes to group those simillar functions:
-// class API {
-//   static fetch() {
-//     return fn(2);
-//   }
+/* TODO here we can use classes to group those simillar functions:
+class API {
+  static fetch() {
+    return fn(2);
+  }
 
-//   static send(body) {
-//     return fn(1, body)
-//   }
-// }
-// API.fetch()
+  static send(body) {
+    return fn(1, body)
+  }
+}
+API.fetch()
+*/
 
 const getData = () => load(ApiOptions.FETCH);
 

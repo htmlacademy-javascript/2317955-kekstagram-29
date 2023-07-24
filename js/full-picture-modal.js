@@ -1,15 +1,8 @@
-import {picturesContainer} from './render-pictures.js';
-import {renderFullPicture} from './render-full-picture.js';
-import {SHOWN_COMMENTS_NUMBER} from './constants.js';
-import {onCommentsLoadBtnClick} from './render-comments.js';
+import {picturesContainer} from './gallery.js';
+import {renderFullPicture} from './full-picture.js';
+import {onCommentsLoadBtnClick, SHOWN_COMMENTS_COUNT} from './comments.js';
 import {isKeyEscape} from './util.js';
-
-const fullPicture = document.querySelector('.big-picture');
-const fullPictureCloseBtn = fullPicture.querySelector('.big-picture__cancel');
-const commentsContainer = fullPicture.querySelector('.social__comments');
-const allComments = commentsContainer.children;
-const commentsLoadBtn = fullPicture.querySelector('.social__comments-loader');
-const commentCount = fullPicture.querySelector('.comments-count__shown');
+import {MODALS, NODES} from './html-elements.js';
 
 
 const getFullPictureData = (evt, picturesData) => {
@@ -33,22 +26,22 @@ const openFullPicture = (evt, picturesData) => {
 
   renderFullPicture(pictureData);
 
-  fullPicture.classList.remove('hidden');
+  MODALS.fullPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
-  if (allComments.length > SHOWN_COMMENTS_NUMBER) {
-    commentsLoadBtn.addEventListener('click', onCommentsLoadBtnClick);
+  NODES.fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
+  if (NODES.allComments.length > SHOWN_COMMENTS_COUNT) {
+    NODES.commentsLoadBtn.addEventListener('click', onCommentsLoadBtnClick);
   }
   document.addEventListener('keydown', onFullPictureEscapePress);
 };
 
 const closeFullPicture = () => {
-  fullPicture.classList.add('hidden');
+  MODALS.fullPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
-  commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
+  NODES.fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
+  NODES.commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
   document.removeEventListener('keydown', onFullPictureEscapePress);
 };
 
@@ -64,16 +57,8 @@ function onFullPictureCloseButton () {
 }
 
 const handlePictureClick = (picturesData) => {
-  const onPicturesContainer = (evt) => openFullPicture(evt, picturesData);
-  picturesContainer.addEventListener('click', onPicturesContainer);
+  const onPicturesContainerClick = (evt) => openFullPicture(evt, picturesData);
+  picturesContainer.addEventListener('click', onPicturesContainerClick);
 };
 
-export {
-  fullPicture,
-  commentsContainer,
-  allComments,
-  commentCount,
-  commentsLoadBtn,
-  openFullPicture,
-  handlePictureClick
-};
+export {handlePictureClick};
