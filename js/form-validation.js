@@ -1,86 +1,142 @@
-// import {form, submitBtn, hashtagInput, commentInput} from './uploading-picture-modal.js';
-import {MAX_HASHTAG_LENGTH, MAX_HASHTAG_AMOUNT, HASHTAG_RULE_REGEX, MAX_DESCRIPTION_LENGTH} from './constants.js';
-const form = document.querySelector('.img-upload__form');
-const hashtagInput = form.querySelector('.text__hashtags');
-const commentInput = form.querySelector('.text__description');
-const submitBtn = form.querySelector('.img-upload__submit');
+import {NEW_PICTURE_FORM} from './html-elements.js';
+
+const MAX_HASHTAG_LENGTH = 19;
+const MAX_HASHTAG_COUNT = 5;
+const MAX_DESCRIPTION_LENGTH = 140;
+const HASHTAG_RULE_REGEX = new RegExp(`^#[a-zа-яё0-9]{1,${MAX_HASHTAG_LENGTH}}$`, 'i');
 
 
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper', // Элемент, на который будут добавляться классы
-  // errorClass: '', // Класс, обозначающий невалидное поле
-  // successClass: '', // Класс, обозначающий валидное поле
-  errorTextParent: 'img-upload__field-wrapper', // Элемент, куда будет выводиться текст с ошибкой
-  // errorTextTag: '', // Тег, который будет обрамлять текст ошибки
-  // errorTextClass: '' // Класс для элемента с текстом ошибки
+const pluralRules = new Intl.PluralRules('ru-RU');
+
+const getHashtagCountMessage = (number) => {
+  switch (pluralRules.select(number)) {
+    case 'one': {
+      return `Максимум ${number} хештег`;
+    }
+    case 'few': {
+      return `Максимум ${number} хештега`;
+    }
+    case 'many': {
+      return `Максимум ${number} хештегов`;
+    }
+    // case 'other'
+    default: {
+      return `Максимум ${number} хештега`;
+    }
+  }
+};
+
+const getLettersCountMessage = (number) => {
+  switch (pluralRules.select(number)) {
+    case 'one': {
+      return `Хештег должен начинаться с # и содержать не более ${number} буквы кирилицы и/или латинского алфавита`;
+    }
+    case 'few': {
+      return `Хештег должен начинаться с # и содержать не более ${number} букв кирилицы и/или латинского алфавита`;
+    }
+    case 'many': {
+      return `Хештег должен начинаться с # и содержать не более ${number} букв кирилицы и/или латинского алфавита`;
+    }
+    // case 'other'
+    default: {
+      return `Хештег должен начинаться с # и содержать не более ${number} букв кирилицы и/или латинского алфавита`;
+    }
+  }
+};
+
+const getSymbolsCountMessage = (number) => {
+  switch (pluralRules.select(number)) {
+    case 'one': {
+      return `Максимальная длина сообщения ${number} символ`;
+    }
+    case 'few': {
+      return `Максимальная длина сообщения ${number} символа`;
+    }
+    case 'many': {
+      return `Максимальная длина сообщения ${number} символов`;
+    }
+    // case 'other'
+    default: {
+      return `Максимальная длина сообщения ${number} символа`;
+    }
+  }
+};
+
+
+const pristine = new Pristine(NEW_PICTURE_FORM.root, {
+  classTo: 'img-upload__field-wrapper',
+  errorTextParent: 'img-upload__field-wrapper',
 });
 
-const getHashtagsArray = (value) => value.replace(/\s+/g, ' ').trim().split(' ');
+const isValid = pristine.validate;
+const resetValidator = pristine.reset;
 
-const isHashtagAmountValid = (value) => {
+const getHashtagsArray = (value) => value.toLowerCase().replace(/\s+/g, ' ').trim().split(' ');
+
+const isAllHashtagsUnique = (value) => {
   const hashtags = getHashtagsArray(value);
-  return hashtags.length <= MAX_HASHTAG_AMOUNT;
-};
-pristine.addValidator(
-  hashtagInput,
-  isHashtagAmountValid,
-  `Максимум ${MAX_HASHTAG_AMOUNT} хештегов`,
-  3,
-  true,
-);
 
-const isEveryHashtagValid = (value) => {
+  return hashtags.length === new Set(hashtags).size;
+};
+
+const isAllHashtagsValid = (value) => {
   if (value === '') {
     return true;
   }
+
   const hashtags = getHashtagsArray(value);
+
   return hashtags.every((hashtag) => HASHTAG_RULE_REGEX.test(hashtag));
 };
-pristine.addValidator(
-  hashtagInput,
-  isEveryHashtagValid,
-  `Хештег должен начинаться с # и содержать не более ${MAX_HASHTAG_LENGTH} букв кирилицы и/или латинского алфавита`,
-  2,
-  true,
-);
 
-const isEveryHasgtagUnique = (value) => {
+const isHashtagCountValid = (value) => {
   const hashtags = getHashtagsArray(value);
-  const hashtagsNormalise = hashtags.map((hashtag) => hashtag.toLowerCase());
-  return hashtagsNormalise.length === new Set(hashtagsNormalise).size;
+
+  return hashtags.length <= MAX_HASHTAG_COUNT;
 };
-pristine.addValidator(
-  hashtagInput,
-  isEveryHasgtagUnique,
-  'Хештеги не должны повторяться',
-  1,
-  true,
-);
 
 const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
-pristine.addValidator(
-  commentInput,
-  isDescriptionValid,
-  `Максимальная длина сообщения ${MAX_DESCRIPTION_LENGTH} символов`
-);
 
 
-const disableSubmitBtn = () => {
-  submitBtn.disabled = !pristine.validate();
+const onTextInputChange = () => {
+  NEW_PICTURE_FORM.submitBtn.disabled = !isValid();
 };
 
-hashtagInput.addEventListener('input', () => {
-  disableSubmitBtn();
-});
+const init = () => {
+  pristine.addValidator(
+    NEW_PICTURE_FORM.hashtagInput,
+    isAllHashtagsUnique,
+    'Хештеги не должны повторяться',
+    1,
+    true,
+  );
 
-commentInput.addEventListener('input', () => {
-  disableSubmitBtn();
-});
+  pristine.addValidator(
+    NEW_PICTURE_FORM.hashtagInput,
+    isAllHashtagsValid,
+    getLettersCountMessage(MAX_HASHTAG_LENGTH),
+    2,
+    true,
+  );
 
-const resetValidator = () => pristine.reset();
+  pristine.addValidator(
+    NEW_PICTURE_FORM.hashtagInput,
+    isHashtagCountValid,
+    getHashtagCountMessage(MAX_HASHTAG_COUNT),
+    3,
+    true,
+  );
 
-const isValid = pristine.validate;
+  pristine.addValidator(
+    NEW_PICTURE_FORM.commentInput,
+    isDescriptionValid,
+    getSymbolsCountMessage(MAX_DESCRIPTION_LENGTH)
+  );
+
+  NEW_PICTURE_FORM.hashtagInput.addEventListener('input', onTextInputChange);
+  NEW_PICTURE_FORM.commentInput.addEventListener('input', onTextInputChange);
+};
 
 
-export {resetValidator, isValid};
+export {resetValidator, isValid, init};
 

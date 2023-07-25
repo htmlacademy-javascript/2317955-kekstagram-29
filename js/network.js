@@ -1,22 +1,21 @@
 const BASE_URL = 'https://29.javascript.pages.academy/kekstagram';
 
-const LoadingMethod = {
-  GET: {
+const ApiOptions = {
+  FETCH: {
     route: '/data',
     method: 'GET',
     errorText: 'Не удалось загрузить данные. Попробуйте обновить страницу',
   },
-  POST: {
+  SEND: {
     route: '/',
     method: 'POST',
     errorText: 'Не удалось отправить форму. Попробуйте ещё раз',
   },
 };
 
-
-const load = async ({route, method, errorText}, body = null) => {
+const load = async ({route, method, errorText}, body) => {
   try {
-    const response = await fetch(`${BASE_URL}${route}`, {method, body});
+    const response = await fetch(`${BASE_URL}${route}`, {method, ...(body ? {body: body} : {})});
     if(!response.ok) {
       throw new Error();
     }
@@ -26,10 +25,9 @@ const load = async ({route, method, errorText}, body = null) => {
   }
 };
 
+const fetchData = () => load(ApiOptions.FETCH);
 
-const getData = () => load(LoadingMethod.GET);
-
-const sendData = (body) => load(LoadingMethod.POST, body);
+const sendData = (body) => load(ApiOptions.SEND, body);
 
 
-export {getData, sendData};
+export {fetchData, sendData};

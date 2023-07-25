@@ -1,8 +1,7 @@
 import {isValid} from './form-validation.js';
 import {sendData} from './network.js';
-import {showMessage, onEscapePress} from './errors.js';
-
-const submitBtn = document.querySelector('.img-upload__submit');
+import {show as showMessage} from './modals-with-messages.js';
+import {NEW_PICTURE_FORM} from './html-elements.js';
 
 const SubmitButtonText = {
   IDLE: 'Отправить',
@@ -10,32 +9,31 @@ const SubmitButtonText = {
 };
 
 const blockSubmitButton = () => {
-  submitBtn.disabled = true;
-  submitBtn.textContent = SubmitButtonText.SENDING;
+  NEW_PICTURE_FORM.submitBtn.disabled = true;
+  NEW_PICTURE_FORM.submitBtn.textContent = SubmitButtonText.SENDING;
 };
 
 const unblockSubmitButton = () => {
-  submitBtn.disabled = false;
-  submitBtn.textContent = SubmitButtonText.IDLE;
+  NEW_PICTURE_FORM.submitBtn.disabled = false;
+  NEW_PICTURE_FORM.submitBtn.textContent = SubmitButtonText.IDLE;
 };
 
 
-const setFormSubmit = async (evt, onSuccess) => {
+const submit = async (evt, onSuccess) => {
   evt.preventDefault();
-  if (isValid) {
+
+  if (isValid()) {
     blockSubmitButton();
     try {
       await sendData(new FormData(evt.target));
       onSuccess();
       showMessage('success');
-      document.addEventListener('keydown', onEscapePress);
     } catch (err) {
       showMessage('error');
-      document.addEventListener('keydown', onEscapePress);
     }
     unblockSubmitButton();
   }
 };
 
 
-export {setFormSubmit};
+export {submit};

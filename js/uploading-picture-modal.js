@@ -1,84 +1,47 @@
+import {isKeyEscape, isTextFieldActive} from './util.js';
 import {resetValidator} from './form-validation.js';
-import {isTextFieldActive} from './util.js';
-import {setFormSubmit} from './uploading-picture-form.js';
-
-const ACCEPTABLE_FILE_TYPES = ['jpg', 'jprg', 'png'];
-
-const form = document.querySelector('.img-upload__form');
-const uploadModal = form.querySelector('.img-upload__overlay');
-const imgInput = form.querySelector('.img-upload__input');
-const hashtagInput = form.querySelector('.text__hashtags');
-const commentInput = form.querySelector('.text__description');
-const formCloseBtn = form.querySelector('.img-upload__cancel');
-const preview = form.querySelector('.img-upload__preview img');
-const effectsPreviews = form.querySelectorAll('.effects__preview');
-const scaleInput = form.querySelector('.scale__control--value');
+import {resetEffects} from './effects.js';
+import {RESULT_MESSAGE, NEW_PICTURE_FORM} from './html-elements.js';
 
 
-const openModal = () => {
-  uploadModal.classList.remove('hidden');
+const open = () => {
+  NEW_PICTURE_FORM.uploadingModal.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  formCloseBtn.addEventListener('click', onCloseBtnClick);
-  document.addEventListener('keydown', onDocumentEscape);
+  NEW_PICTURE_FORM.formCloseBtn.addEventListener('click', onCloseBtnClick);
+  document.addEventListener('keydown', onEscapePress);
 };
 
 const resetForm = () => {
-  scaleInput.value = '100%';
-  preview.style.transform = 'scale(1)';
-  form.querySelector('.effects__radio[value = "none"]').checked = true;
-  imgInput.value = '';
-  hashtagInput.value = '';
-  commentInput.value = '';
+  NEW_PICTURE_FORM.submitBtn.disabled = false;
+  NEW_PICTURE_FORM.scaleInput.value = '100%';
+  NEW_PICTURE_FORM. preview.style.transform = 'scale(1)';
+  NEW_PICTURE_FORM.pictureInput.value = '';
+  NEW_PICTURE_FORM.hashtagInput.value = '';
+  NEW_PICTURE_FORM.commentInput.value = '';
+  resetEffects();
   resetValidator();
 };
 
-const closeModal = () => {
+const close = () => {
   resetForm();
-  uploadModal.classList.add('hidden');
+  NEW_PICTURE_FORM.uploadingModal.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  formCloseBtn.removeEventListener('click', onCloseBtnClick);
-  document.removeEventListener('keydown', onDocumentEscape);
+  NEW_PICTURE_FORM.formCloseBtn.removeEventListener('click', onCloseBtnClick);
+  document.removeEventListener('keydown', onEscapePress);
 };
 
 function onCloseBtnClick () {
-  closeModal();
+  close();
 }
 
-function onDocumentEscape (evt) {
-  if (!isTextFieldActive()) {
-    if(evt.key === 'Escape') {
+function onEscapePress (evt) {
+  if (!isTextFieldActive() && RESULT_MESSAGE.error.classList.contains('hidden')) {
+    if(isKeyEscape(evt)) {
       evt.preventDefault();
-      closeModal();
+      close();
     }
   }
 }
 
-const onInputImgChange = () => {
-  const file = imgInput.files[0];
-  const fileName = file.name.toLowerCase();
-  const isNameAcceptable = ACCEPTABLE_FILE_TYPES.some((type) => fileName.endsWith(type));
-  if(isNameAcceptable) {
-    preview.src = URL.createObjectURL(file);
-    effectsPreviews.forEach((effectPreview) => {
-      effectPreview.style.backgroundImage = `url(${preview.src})`;
-    });
-  }
 
-  openModal();
-};
-
-imgInput.addEventListener('change', onInputImgChange);
-
-const onFormSubmit = (evt) => setFormSubmit(evt, closeModal);
-form.addEventListener('submit', onFormSubmit);
-
-
-export {
-  form,
-  imgInput,
-  hashtagInput,
-  commentInput,
-  preview,
-  scaleInput,
-  closeModal,
-};
+export {open as openModal, close as closeModal};
