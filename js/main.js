@@ -1,16 +1,20 @@
-import {getData} from './network.js';
+import {GALLERY} from './html-elements.js';
+import {fetchData} from './network.js';
 import {showAlert} from './util.js';
-import {renderPictures} from './gallery.js';
-import {handlePictureClick} from './full-picture-modal.js';
-import {handleFiltersClick} from './filters-manager.js';
+import {render as renderGallery} from './gallery.js';
+import {open as openFullPicture} from './full-picture-modal.js';
+import {handleClick as handleFiltersClick} from './filters-manager.js';
 import {init as initUploadingPicture} from './uploading-picture-manager.js';
 
 
 try {
-  const picturesData = await getData();
-  renderPictures(picturesData);
-  handlePictureClick(picturesData);
-  handleFiltersClick(renderPictures, picturesData);
+  const picturesData = await fetchData();
+  renderGallery(picturesData);
+
+  const onGalleryClick = (evt) => openFullPicture(evt, picturesData);
+  GALLERY.root.addEventListener('click', onGalleryClick);
+
+  handleFiltersClick(renderGallery, picturesData);
 } catch (err) {
   showAlert(err.message);
 }

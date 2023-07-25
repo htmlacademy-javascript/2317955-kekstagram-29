@@ -1,16 +1,12 @@
 const ALERT_SHOW_TIME = 5000;
-const KEYS_KEYCODE = {
+const KEYBOARD_KEYCODE = {
   Escape: 'Escape',
 };
 
-const isKeyEscape = (evt) => evt.key === KEYS_KEYCODE.Escape;
+const isKeyEscape = (evt) => evt.key === KEYBOARD_KEYCODE.Escape;
 
-const isTextFieldActive = () => {
-  if (document.activeElement.type === 'text' || document.activeElement.type === 'textarea') {
-    return true;
-  }
-  return false;
-};
+const isTextFieldActive = () => document.activeElement.type === 'text'
+                             || document.activeElement.type === 'textarea';
 
 const makeElement = (tagName, options) => Object.assign(document.createElement(tagName), options);
 
@@ -23,11 +19,13 @@ const showAlert = (message) => {
 const createMessageModal = (template) => {
   const modal = document.body.appendChild(template.cloneNode(true));
   modal.classList.add('hidden');
+
   return modal;
 };
 
 const debounce = (callback, timeoutDelay) => {
   let timeoutId;
+
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);

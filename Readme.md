@@ -49,3 +49,31 @@ git clone SSH-адрес_вашего_форка
 <a href="https://htmlacademy.ru/intensive/javascript"><img align="left" width="50" height="50" alt="HTML Academy" src="https://up.htmlacademy.ru/static/img/intensive/javascript/logo-for-github-2.png"></a>
 
 Репозиторий создан для обучения на интенсивном онлайн‑курсе «[JavaScript. Профессиональная разработка веб-интерфейсов](https://htmlacademy.ru/intensive/javascript)» от [HTML Academy](https://htmlacademy.ru).
+
+
+#### 5. Личные заметки
+network.js
+можно оформить через классы, пример:
+class API {
+  static fetch() {
+    return fn(2);
+  }
+
+  static send(body) {
+    return fn(1, body)
+  }
+}
+API.fetch()
+
+uploading-picture-form.js
+функции блокировки-разблокировки кнопки отправления можно оформить как класс
+
+form-validation.js
+изменение множественного числа слов можно оформить как класс, пример:
+class MessageFormater {
+  static rules = new Intl.PluralRules('ru-RU');
+
+  static message(n) {
+    return MessageFormater.rules.select(n)
+}
+MessageFormater.message(5)

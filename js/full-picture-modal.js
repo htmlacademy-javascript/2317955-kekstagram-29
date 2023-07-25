@@ -1,23 +1,24 @@
-import {picturesContainer} from './gallery.js';
-import {renderFullPicture} from './full-picture.js';
+import {render as renderFullPicture} from './rendering-full-picture.js';
 import {onCommentsLoadBtnClick, SHOWN_COMMENTS_COUNT} from './comments.js';
 import {isKeyEscape} from './util.js';
-import {MODALS, NODES} from './html-elements.js';
+import {FULL_PICTURE} from './html-elements.js';
 
 
-const getFullPictureData = (evt, picturesData) => {
+const getData = (evt, picturesData) => {
   const picture = evt.target.closest('.picture');
+
   if (!picture) {
     return;
   }
 
-  const pictureId = +picture.dataset.pictureId;
-  const pictureData = picturesData.find((datum) => datum.id === pictureId);
-  return pictureData;
+  const pictureId = Number(picture.dataset.pictureId);
+
+  return picturesData.find((datum) => datum.id === pictureId);
 };
 
-const openFullPicture = (evt, picturesData) => {
-  const pictureData = getFullPictureData(evt, picturesData);
+const open = (evt, picturesData) => {
+  const pictureData = getData(evt, picturesData);
+
   if (!pictureData) {
     return;
   }
@@ -26,39 +27,37 @@ const openFullPicture = (evt, picturesData) => {
 
   renderFullPicture(pictureData);
 
-  MODALS.fullPicture.classList.remove('hidden');
+  FULL_PICTURE.root.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  NODES.fullPictureCloseBtn.addEventListener('click', onFullPictureCloseButton);
-  if (NODES.allComments.length > SHOWN_COMMENTS_COUNT) {
-    NODES.commentsLoadBtn.addEventListener('click', onCommentsLoadBtnClick);
+  FULL_PICTURE.closeBtn.addEventListener('click', onCloseButtonClick);
+
+  if (FULL_PICTURE.commentsContainer.children.length > SHOWN_COMMENTS_COUNT) {
+    FULL_PICTURE.commentsLoadBtn.addEventListener('click', onCommentsLoadBtnClick);
   }
-  document.addEventListener('keydown', onFullPictureEscapePress);
+
+  document.addEventListener('keydown', onEscapePress);
 };
 
-const closeFullPicture = () => {
-  MODALS.fullPicture.classList.add('hidden');
+const close = () => {
+  FULL_PICTURE.root.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  NODES.fullPictureCloseBtn.removeEventListener('click', onFullPictureCloseButton);
-  NODES.commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
-  document.removeEventListener('keydown', onFullPictureEscapePress);
+  FULL_PICTURE.closeBtn.removeEventListener('click', onCloseButtonClick);
+  FULL_PICTURE.commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
+  document.removeEventListener('keydown', onEscapePress);
 };
 
-function onFullPictureEscapePress (evt) {
+function onEscapePress (evt) {
   if(isKeyEscape(evt)) {
     evt.preventDefault();
-    closeFullPicture();
+    close();
   }
 }
 
-function onFullPictureCloseButton () {
-  closeFullPicture();
+function onCloseButtonClick () {
+  close();
 }
 
-const handlePictureClick = (picturesData) => {
-  const onPicturesContainerClick = (evt) => openFullPicture(evt, picturesData);
-  picturesContainer.addEventListener('click', onPicturesContainerClick);
-};
 
-export {handlePictureClick};
+export {open};

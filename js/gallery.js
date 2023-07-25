@@ -1,9 +1,8 @@
-const picturesContainer = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+import {GALLERY, TEMPLATE} from './html-elements.js';
 
 
 const createNewPicture = ({url, description, likes, comments, id}) => {
-  const newPicture = pictureTemplate.cloneNode(true);
+  const newPicture = TEMPLATE.picture.cloneNode(true);
   const image = newPicture.querySelector('.picture__img');
 
   newPicture.dataset.pictureId = id;
@@ -15,15 +14,15 @@ const createNewPicture = ({url, description, likes, comments, id}) => {
   return newPicture;
 };
 
-const renderPictures = (data) => {
+const render = (data) => {
   const picturesTemporaryFragment = document.createDocumentFragment();
   data.forEach((datum) => {
     const newPicture = createNewPicture(datum);
     picturesTemporaryFragment.append(newPicture);
   });
 
-  picturesContainer.append(picturesTemporaryFragment);
+  GALLERY.root.append(picturesTemporaryFragment);
 };
 
 
-export {renderPictures, picturesContainer};
+export {render};

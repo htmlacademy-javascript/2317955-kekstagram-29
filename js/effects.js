@@ -1,4 +1,4 @@
-import {MODALS, NODES} from './html-elements.js';
+import {NEW_PICTURE_FORM} from './html-elements.js';
 
 const EffectsOptions = {
   NONE: {
@@ -72,10 +72,10 @@ const EffectsOptions = {
 let chosenEffect;
 
 const resetEffects = () => {
-  NODES.sliderContainer.classList.add('hidden');
-  NODES.preview.style.filter = 'none';
-  MODALS.newPictureForm.querySelector('.effects__radio[value = "none"]').checked = true;
-  NODES.sliderInput.value = 0;
+  NEW_PICTURE_FORM.sliderContainer.classList.add('hidden');
+  NEW_PICTURE_FORM.preview.style.filter = 'none';
+  NEW_PICTURE_FORM.defaultEffect.checked = true;
+  NEW_PICTURE_FORM.sliderInput.value = 0;
 };
 
 const onEffectSelect = (evt) => {
@@ -87,19 +87,20 @@ const onEffectSelect = (evt) => {
   const effect = EffectsOptions[chosenEffect];
 
   if (chosenEffect === 'NONE') {
-    NODES.sliderContainer.classList.add('hidden');
+    NEW_PICTURE_FORM.sliderContainer.classList.add('hidden');
   } else {
-    NODES.sliderContainer.classList.remove('hidden');
+    NEW_PICTURE_FORM.sliderContainer.classList.remove('hidden');
   }
-  NODES.slider.noUiSlider.updateOptions(effect.sliderOptions);
+
+  NEW_PICTURE_FORM.slider.noUiSlider.updateOptions(effect.sliderOptions);
 };
 
 const init = () => {
   resetEffects();
 
-  NODES.buttonsContainer.addEventListener('change', onEffectSelect);
+  NEW_PICTURE_FORM.buttonsContainer.addEventListener('change', onEffectSelect);
 
-  noUiSlider.create(NODES.slider, {
+  noUiSlider.create(NEW_PICTURE_FORM.slider, {
     ...EffectsOptions.NONE.sliderOptions,
     connect: 'lower',
     format: {
@@ -108,12 +109,14 @@ const init = () => {
     },
   });
 
-  NODES.slider.noUiSlider.on('update', () => {
-    NODES.sliderInput.value = NODES.slider.noUiSlider.get();
+  NEW_PICTURE_FORM.slider.noUiSlider.on('update', () => {
+    NEW_PICTURE_FORM.sliderInput.value = NEW_PICTURE_FORM.slider.noUiSlider.get();
     const effect = EffectsOptions[chosenEffect];
+
     if (effect) {
-      NODES.preview.style.filter = effect.filterOptions(NODES.sliderInput.value);
+      NEW_PICTURE_FORM.preview.style.filter = effect.filterOptions(NEW_PICTURE_FORM.sliderInput.value);
     }
+
   });
 };
 

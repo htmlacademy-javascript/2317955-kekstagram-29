@@ -1,19 +1,10 @@
-import {MODALS, NODES} from './html-elements.js';
+import {NEW_PICTURE_FORM} from './html-elements.js';
 
 const MAX_HASHTAG_LENGTH = 19;
 const MAX_HASHTAG_COUNT = 5;
 const MAX_DESCRIPTION_LENGTH = 140;
 const HASHTAG_RULE_REGEX = new RegExp(`^#[a-zа-яё0-9]{1,${MAX_HASHTAG_LENGTH}}$`, 'i');
 
-/* TODO here we can use classes to group those simillar functions:
-class MessageFormater {
-  static rules = new Intl.PluralRules('ru-RU');
-
-  static message(n) {
-    return MessageFormater.rules.select(n)
-}
-MessageFormater.message(5)
-*/
 
 const pluralRules = new Intl.PluralRules('ru-RU');
 
@@ -34,6 +25,7 @@ const getHashtagCountMessage = (number) => {
     }
   }
 };
+
 const getLettersCountMessage = (number) => {
   switch (pluralRules.select(number)) {
     case 'one': {
@@ -51,6 +43,7 @@ const getLettersCountMessage = (number) => {
     }
   }
 };
+
 const getSymbolsCountMessage = (number) => {
   switch (pluralRules.select(number)) {
     case 'one': {
@@ -70,7 +63,7 @@ const getSymbolsCountMessage = (number) => {
 };
 
 
-const pristine = new Pristine(MODALS.newPictureForm, {
+const pristine = new Pristine(NEW_PICTURE_FORM.root, {
   classTo: 'img-upload__field-wrapper',
   errorTextParent: 'img-upload__field-wrapper',
 });
@@ -80,21 +73,25 @@ const resetValidator = pristine.reset;
 
 const getHashtagsArray = (value) => value.toLowerCase().replace(/\s+/g, ' ').trim().split(' ');
 
-const isEveryHasgtagUnique = (value) => {
+const isAllHashtagsUnique = (value) => {
   const hashtags = getHashtagsArray(value);
+
   return hashtags.length === new Set(hashtags).size;
 };
 
-const isEveryHashtagValid = (value) => {
+const isAllHashtagsValid = (value) => {
   if (value === '') {
     return true;
   }
+
   const hashtags = getHashtagsArray(value);
+
   return hashtags.every((hashtag) => HASHTAG_RULE_REGEX.test(hashtag));
 };
 
 const isHashtagCountValid = (value) => {
   const hashtags = getHashtagsArray(value);
+
   return hashtags.length <= MAX_HASHTAG_COUNT;
 };
 
@@ -102,28 +99,28 @@ const isDescriptionValid = (value) => value.length <= MAX_DESCRIPTION_LENGTH;
 
 
 const onTextInputChange = () => {
-  NODES.submitBtn.disabled = !isValid();
+  NEW_PICTURE_FORM.submitBtn.disabled = !isValid();
 };
 
 const init = () => {
   pristine.addValidator(
-    NODES.hashtagInput,
-    isEveryHasgtagUnique,
+    NEW_PICTURE_FORM.hashtagInput,
+    isAllHashtagsUnique,
     'Хештеги не должны повторяться',
     1,
     true,
   );
 
   pristine.addValidator(
-    NODES.hashtagInput,
-    isEveryHashtagValid,
+    NEW_PICTURE_FORM.hashtagInput,
+    isAllHashtagsValid,
     getLettersCountMessage(MAX_HASHTAG_LENGTH),
     2,
     true,
   );
 
   pristine.addValidator(
-    NODES.hashtagInput,
+    NEW_PICTURE_FORM.hashtagInput,
     isHashtagCountValid,
     getHashtagCountMessage(MAX_HASHTAG_COUNT),
     3,
@@ -131,13 +128,13 @@ const init = () => {
   );
 
   pristine.addValidator(
-    NODES.commentInput,
+    NEW_PICTURE_FORM.commentInput,
     isDescriptionValid,
     getSymbolsCountMessage(MAX_DESCRIPTION_LENGTH)
   );
 
-  NODES.hashtagInput.addEventListener('input', onTextInputChange);
-  NODES.commentInput.addEventListener('input', onTextInputChange);
+  NEW_PICTURE_FORM.hashtagInput.addEventListener('input', onTextInputChange);
+  NEW_PICTURE_FORM.commentInput.addEventListener('input', onTextInputChange);
 };
 
 

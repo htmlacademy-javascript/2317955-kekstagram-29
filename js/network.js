@@ -13,7 +13,6 @@ const ApiOptions = {
   },
 };
 
-
 const load = async ({route, method, errorText}, body) => {
   try {
     const response = await fetch(`${BASE_URL}${route}`, {method, ...(body ? {body: body} : {})});
@@ -26,22 +25,9 @@ const load = async ({route, method, errorText}, body) => {
   }
 };
 
-/* TODO here we can use classes to group those simillar functions:
-class API {
-  static fetch() {
-    return fn(2);
-  }
-
-  static send(body) {
-    return fn(1, body)
-  }
-}
-API.fetch()
-*/
-
-const getData = () => load(ApiOptions.FETCH);
+const fetchData = () => load(ApiOptions.FETCH);
 
 const sendData = (body) => load(ApiOptions.SEND, body);
 
 
-export {getData, sendData};
+export {fetchData, sendData};

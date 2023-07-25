@@ -1,36 +1,69 @@
 import {createMessageModal} from './util.js';
 
-export const MODALS = {
-  newPictureForm: document.querySelector('.img-upload__form'),
-  fullPicture: document.querySelector('.big-picture'),
-  resultMessage: {
-    success: createMessageModal(document.querySelector('#success').content.querySelector('.success')),
-    error  : createMessageModal(document.querySelector('#error').content.querySelector('.error')),
-  },
+
+const TEMPLATE = {
+  picture     : document.querySelector('#picture').content.querySelector('.picture'),
+  successModal: document.querySelector('#success').content.querySelector('.success'),
+  errorModal  : document.querySelector('#error').content.querySelector('.error'),
 };
 
-export const NODES = {
-  uploadingModal   : MODALS.newPictureForm.querySelector('.img-upload__overlay'),
-  pictureInput     : MODALS.newPictureForm.querySelector('.img-upload__input'),
-  hashtagInput     : MODALS.newPictureForm.querySelector('.text__hashtags'),
-  commentInput     : MODALS.newPictureForm.querySelector('.text__description'),
-  sliderContainer  : MODALS.newPictureForm.querySelector('.img-upload__effect-level'),
-  slider           : MODALS.newPictureForm.querySelector('.effect-level__slider'),
-  sliderInput      : MODALS.newPictureForm.querySelector('.effect-level__value'),
-  scaleInput       : MODALS.newPictureForm.querySelector('.scale__control--value'),
-  scalingUpButton  : MODALS.newPictureForm.querySelector('.scale__control--bigger'),
-  scalingDownButton: MODALS.newPictureForm.querySelector('.scale__control--smaller'),
-  preview          : MODALS.newPictureForm.querySelector('.img-upload__preview img'),
-  buttonsContainer : MODALS.newPictureForm.querySelector('.img-upload__effects'),
-  effectsPreviews  : MODALS.newPictureForm.querySelectorAll('.effects__preview'),
-  submitBtn        : MODALS.newPictureForm.querySelector('.img-upload__submit'),
-  formCloseBtn     : MODALS.newPictureForm.querySelector('.img-upload__cancel'),
-
-  picture              : MODALS.fullPicture.querySelector('.big-picture__img img'),
-  commentsContainer  : MODALS.fullPicture.querySelector('.social__comments'),
-  allComments        : MODALS.fullPicture.querySelector('.social__comments').children,
-  commentCount       : MODALS.fullPicture.querySelector('.comments-count__shown'),
-  commentsLoadBtn    : MODALS.fullPicture.querySelector('.social__comments-loader'),
-  fullPictureCloseBtn: MODALS.fullPicture.querySelector('.big-picture__cancel'),
+const RESULT_MESSAGE = {
+  success: createMessageModal(TEMPLATE.successModal),
+  error  : createMessageModal(TEMPLATE.errorModal),
 };
 
+const GALLERY_ROOT = document.querySelector('.pictures');
+const GALLERY = {
+  root: GALLERY_ROOT,
+};
+
+const FITERS_ROOT = document.querySelector('.img-filters');
+const FILTERS = {
+  root   : FITERS_ROOT,
+  default: FITERS_ROOT.querySelector('#filter-default'),
+};
+
+const FULL_PCITURE_ROOT = document.querySelector('.big-picture');
+const FULL_PICTURE = {
+  root              : FULL_PCITURE_ROOT,
+  picture           : FULL_PCITURE_ROOT.querySelector('.big-picture__img img'),
+  closeBtn          : FULL_PCITURE_ROOT.querySelector('.big-picture__cancel'),
+  commentsContainer : FULL_PCITURE_ROOT.querySelector('.social__comments'),
+  shownCommentsCount: FULL_PCITURE_ROOT.querySelector('.comments-count__shown'),
+  allCommentsCount  : FULL_PCITURE_ROOT.querySelector('.comments-count'),
+  commentsLoadBtn   : FULL_PCITURE_ROOT.querySelector('.social__comments-loader'),
+  commentsLoader    : FULL_PCITURE_ROOT.querySelector('.social__comments-loader'),
+  likesCount        : FULL_PCITURE_ROOT.querySelector('.likes-count'),
+  description       : FULL_PCITURE_ROOT.querySelector('.social__caption'),
+};
+
+const NEW_PICTURE_FORM_ROOT = document.querySelector('.img-upload__form');
+const NEW_PICTURE_FORM = {
+  root             : NEW_PICTURE_FORM_ROOT,
+  uploadingModal   : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__overlay'),
+  pictureInput     : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__input'),
+  hashtagInput     : NEW_PICTURE_FORM_ROOT.querySelector('.text__hashtags'),
+  commentInput     : NEW_PICTURE_FORM_ROOT.querySelector('.text__description'),
+  sliderContainer  : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__effect-level'),
+  slider           : NEW_PICTURE_FORM_ROOT.querySelector('.effect-level__slider'),
+  sliderInput      : NEW_PICTURE_FORM_ROOT.querySelector('.effect-level__value'),
+  scaleInput       : NEW_PICTURE_FORM_ROOT.querySelector('.scale__control--value'),
+  scalingUpButton  : NEW_PICTURE_FORM_ROOT.querySelector('.scale__control--bigger'),
+  scalingDownButton: NEW_PICTURE_FORM_ROOT.querySelector('.scale__control--smaller'),
+  preview          : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__preview img'),
+  buttonsContainer : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__effects'),
+  defaultEffect    : NEW_PICTURE_FORM_ROOT.querySelector('.effects__radio[value = "none"]'),
+  effectsPreviews  : NEW_PICTURE_FORM_ROOT.querySelectorAll('.effects__preview'),
+  submitBtn        : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__submit'),
+  formCloseBtn     : NEW_PICTURE_FORM_ROOT.querySelector('.img-upload__cancel'),
+};
+
+
+export {
+  TEMPLATE,
+  NEW_PICTURE_FORM,
+  FULL_PICTURE,
+  FILTERS,
+  RESULT_MESSAGE,
+  GALLERY
+};

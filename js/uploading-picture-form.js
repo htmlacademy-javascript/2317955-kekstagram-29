@@ -1,27 +1,27 @@
 import {isValid} from './form-validation.js';
 import {sendData} from './network.js';
-import {showMessage} from './modals-with-messages.js';
-import {NODES} from './html-elements.js';
+import {show as showMessage} from './modals-with-messages.js';
+import {NEW_PICTURE_FORM} from './html-elements.js';
 
 const SubmitButtonText = {
   IDLE: 'Отправить',
   SENDING: 'Отправляю...'
 };
 
-// TODO here we can use classes to group those simillar functions
 const blockSubmitButton = () => {
-  NODES.submitBtn.disabled = true;
-  NODES.submitBtn.textContent = SubmitButtonText.SENDING;
+  NEW_PICTURE_FORM.submitBtn.disabled = true;
+  NEW_PICTURE_FORM.submitBtn.textContent = SubmitButtonText.SENDING;
 };
 
 const unblockSubmitButton = () => {
-  NODES.submitBtn.disabled = false;
-  NODES.submitBtn.textContent = SubmitButtonText.IDLE;
+  NEW_PICTURE_FORM.submitBtn.disabled = false;
+  NEW_PICTURE_FORM.submitBtn.textContent = SubmitButtonText.IDLE;
 };
 
 
-const setFormSubmit = async (evt, onSuccess) => {
+const submit = async (evt, onSuccess) => {
   evt.preventDefault();
+
   if (isValid()) {
     blockSubmitButton();
     try {
@@ -36,4 +36,4 @@ const setFormSubmit = async (evt, onSuccess) => {
 };
 
 
-export {setFormSubmit};
+export {submit};

@@ -1,7 +1,8 @@
 import {makeElement} from './util.js';
-import {MODALS, NODES} from './html-elements.js';
+import {FULL_PICTURE} from './html-elements.js';
 
 const SHOWN_COMMENTS_COUNT = 5;
+const root = FULL_PICTURE.commentsContainer;
 
 const renderComment = ({avatar, name, message}) => {
   const newComment = makeElement('li', {className: 'social__comment'});
@@ -19,27 +20,30 @@ const renderComments = (commentsData) => {
     const newComment = renderComment(commentDatum);
     commentsTemporaryFragment.append(newComment);
   });
+
   return commentsTemporaryFragment;
 };
 
 const hideSomeComments = () => {
-  for (let i = SHOWN_COMMENTS_COUNT; i < NODES.allComments.length; i++) {
-    NODES.allComments.item(i).classList.add('hidden');
+  for (let i = SHOWN_COMMENTS_COUNT; i < root.children.length; i++) {
+    root.children.item(i).classList.add('hidden');
   }
 };
 
 function onCommentsLoadBtnClick () {
-  const firstHiddenComment = MODALS.fullPicture.querySelector('.social__comment.hidden');
-  const firstHiddenCommentIndex = [...NODES.allComments].indexOf(firstHiddenComment);
-  const breakpoint = Math.min(firstHiddenCommentIndex + SHOWN_COMMENTS_COUNT, NODES.allComments.length) ;
+  const firstHiddenCommentIndex = [...root.children].findIndex((comment) => comment.classList.contains('hidden'));
+  const breakpoint = Math.min(firstHiddenCommentIndex + SHOWN_COMMENTS_COUNT, root.children.length) ;
+
   for (let i = firstHiddenCommentIndex; i < breakpoint ; i++) {
-    NODES.allComments.item(i).classList.remove('hidden');
+    root.children.item(i).classList.remove('hidden');
   }
-  if (breakpoint === NODES.allComments.length) {
-    MODALS.fullPicture.querySelector('.social__comments-loader').classList.add('hidden');
-    NODES.commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
+
+  if (breakpoint === root.children.length) {
+    FULL_PICTURE.commentsLoader.classList.add('hidden');
+    FULL_PICTURE.commentsLoadBtn.removeEventListener('click', onCommentsLoadBtnClick);
   }
-  NODES.commentCount.textContent = `${breakpoint} из `;
+
+  FULL_PICTURE.shownCommentsCount.textContent = `${breakpoint} из `;
 }
 
 

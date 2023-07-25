@@ -1,10 +1,10 @@
 import {debounce} from './util.js';
-import {MODALS} from './html-elements.js';
+import {FILTERS} from './html-elements.js';
 
 const RERENDER_DELAY = 500;
 const RANDOM_PICTURES_COUNT = 10;
 
-let currentActiveButton = MODALS.newPictureForm.querySelector('#filter-default');
+let currentActiveButton = FILTERS.default;
 
 const getFiltersData = (effect, picturesData) => {
   switch (effect) {
@@ -33,16 +33,16 @@ const filterPictures = (evt, cb, picturesData) => {
 };
 
 
-const handleFiltersClick = (cb, picturesData) => {
-  document.querySelector('.img-filters').classList.remove('img-filters--inactive');
-  const debounceFunction = debounce((data) => {
+const handleClick = (cb, picturesData) => {
+  FILTERS.root.classList.remove('img-filters--inactive');
+  const getDebouncedFunction = debounce((data) => {
     const previousPictures = document.querySelectorAll('.picture');
     previousPictures.forEach((previousPicture) => previousPicture.remove());
     cb(data);
   }, RERENDER_DELAY);
-  const onFilterBtnClick = (evt) => filterPictures(evt, debounceFunction, picturesData);
-  MODALS.newPictureForm.addEventListener('click', onFilterBtnClick);
+  const onFilterBtnClick = (evt) => filterPictures(evt, getDebouncedFunction, picturesData);
+  FILTERS.root.addEventListener('click', onFilterBtnClick);
 };
 
 
-export {handleFiltersClick};
+export {handleClick};
