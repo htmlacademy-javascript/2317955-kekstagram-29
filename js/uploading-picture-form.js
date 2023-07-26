@@ -8,14 +8,9 @@ const SubmitButtonText = {
   SENDING: 'Отправляю...'
 };
 
-const blockSubmitButton = () => {
-  NEW_PICTURE_FORM.submitBtn.disabled = true;
-  NEW_PICTURE_FORM.submitBtn.textContent = SubmitButtonText.SENDING;
-};
-
-const unblockSubmitButton = () => {
-  NEW_PICTURE_FORM.submitBtn.disabled = false;
-  NEW_PICTURE_FORM.submitBtn.textContent = SubmitButtonText.IDLE;
+const regulateSubmitButton = (needToDisable) => {
+  NEW_PICTURE_FORM.submitBtn.disabled = needToDisable;
+  NEW_PICTURE_FORM.submitBtn.textContent = needToDisable ? SubmitButtonText.SENDING : SubmitButtonText.IDLE;
 };
 
 
@@ -23,7 +18,7 @@ const submit = async (evt, onSuccess) => {
   evt.preventDefault();
 
   if (isValid()) {
-    blockSubmitButton();
+    regulateSubmitButton(true);
     try {
       await sendData(new FormData(evt.target));
       onSuccess();
@@ -31,7 +26,7 @@ const submit = async (evt, onSuccess) => {
     } catch (err) {
       showMessage('error');
     }
-    unblockSubmitButton();
+    regulateSubmitButton(false);
   }
 };
 
